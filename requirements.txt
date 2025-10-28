@@ -1,0 +1,6 @@
+fastapi[all]
+uvicorn
+sqlalchemy
+pydantic
+pandas
+openpyxl  # Para generar XLSX
