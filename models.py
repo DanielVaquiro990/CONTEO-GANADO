@@ -8,7 +8,7 @@ class Finca(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     nombre = Column(String(100), nullable=False)
-    tamaño = Column(String(50), nullable=False)
+    tamaño = Column(Integer, nullable=False)
     ubicacion = Column(String(200), nullable=False)
     fecha_creacion = Column(DateTime, default=datetime.utcnow) #Fechas para las creacion de fincas
 

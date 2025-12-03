@@ -2,7 +2,7 @@ from pydantic import BaseModel
 
 class FincaBase(BaseModel):
     nombre: str
-    tamaño: int
+    tamaño: int #Tamaño como entero (hectareas)
     ubicacion: str
 
 class FincaCreate(FincaBase):
