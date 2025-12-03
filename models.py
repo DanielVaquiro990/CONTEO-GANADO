@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
-from datetime import datetime
+from datetime import datetime 
 from database import Base
 
 class Finca(Base):
@@ -10,7 +10,7 @@ class Finca(Base):
     nombre = Column(String(100), nullable=False)
     tamaño = Column(String(50), nullable=False)
     ubicacion = Column(String(200), nullable=False)
-    fecha_creacion = Column(DateTime, default=datetime.utcnow)
+    fecha_creacion = Column(DateTime, default=datetime.utcnow) #Fechas para las creacion de fincas
 
     # Relación con Ganado
     ganados = relationship(
@@ -28,7 +28,16 @@ class Ganado(Base):
     edad = Column(Integer, nullable=False)
     sexo = Column(String(10), nullable=False)
     finca_id = Column(Integer, ForeignKey("fincas.id"), nullable=False)
-    fecha_registro = Column(DateTime, default=datetime.utcnow)
+    fecha_registro = Column(DateTime, default=datetime.utcnow) #Fecha automatica para el registro de ganado
 
     # Relación inversa
     finca = relationship("Finca", back_populates="ganados")
+    tipo_animal = relationship("TipoAnimal", back_populates="ganados")
+
+class TipoAnimal(Base):
+    __tablename__ = "tipos_animales"
+
+    id = Column(Integer, primary_key=True, index=True)
+    nombre = Column(String, unique=True, index=True)  # vaca, cerdo, caballo, etc.
+
+    ganados = relationship("Ganado", back_populates="tipo_animal")
