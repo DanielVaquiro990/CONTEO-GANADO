@@ -28,10 +28,11 @@ class Ganado(Base):
     edad = Column(Integer, nullable=False)
     sexo = Column(String(10), nullable=False)
     finca_id = Column(Integer, ForeignKey("fincas.id"), nullable=False)
-    fecha_registro = Column(DateTime, default=datetime.utcnow) #Fecha automatica para el registro de ganado
 
-    # Relación inversa
+    fecha_registro = Column(DateTime, default=datetime.utcnow) #Fecha automatica para el registro de ganado
     finca = relationship("Finca", back_populates="ganados")
+
+    tipo_animal_id = Column(Integer, ForeignKey("tipos_animales.id"))
     tipo_animal = relationship("TipoAnimal", back_populates="ganados")
 
 class TipoAnimal(Base):
