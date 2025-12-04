@@ -1,56 +1,121 @@
-body {
+/* Importar fuente similar (Roboto o sans-serif estándar) */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+* {
     margin: 0;
-    font-family: Arial, Helvetica, sans-serif;
-    background: #f5f5f5;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
 }
 
+body {
+    background-color: #dcdcdc; /* Fondo gris claro general */
+    min-height: 100vh;
+}
+
+/* --- ESTILOS DE LA BARRA DE NAVEGACIÓN (IDÉNTICOS AL FORMULARIO) --- */
 .navbar {
-    background: #333;
-    color: white;
-    padding: 15px;
+    background-color: #26282f; /* Fondo oscuro (el mismo de la tarjeta) */
+    padding: 15px 30px;
     display: flex;
-    align-items: center;
     justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
 }
 
-.navbar a {
-    color: white;
+.navbar .logo {
+    color: #ffffff;
     text-decoration: none;
-    margin: 0 10px;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+/* Estilos de la barra de búsqueda dentro de la navbar */
+.navbar .search-bar {
+    display: flex;
+    gap: 10px;
+}
+
+.navbar .search-bar input {
+    padding: 8px;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+    /* Estilos adicionales para que se vea bien sobre el fondo oscuro */
+    background-color: #383c45; 
+    color: #ffffff;
+}
+
+.navbar .search-bar button {
+    padding: 8px 15px;
+    background-color: #00cba9; /* Verde del tema */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.navbar .search-bar button:hover {
+    background-color: #00a88d;
 }
 
 .nav-links {
     list-style: none;
     display: flex;
+    gap: 20px;
 }
 
-.nav-links li {
-    margin: 0 10px;
+.nav-links a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 16px;
+    transition: color 0.3s;
 }
 
+.nav-links a:hover {
+    color: #00cba9; /* Resaltado verde */
+}
+/* --- FIN ESTILOS NAVBAR --- */
+
+/* Contenedor principal de la página de inicio */
 .container {
     padding: 30px;
 }
 
+/* --- ESTILOS DE TABLAS Y BOTONES (Adaptados al tema verde/oscuro) --- */
 table {
     width: 100%;
     border-collapse: collapse;
     background: white;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    overflow: hidden; /* Para que las esquinas redondeadas apliquen */
 }
 
 table th, table td {
-    padding: 10px;
+    padding: 15px;
     border: 1px solid #ddd;
+    text-align: left;
 }
 
+table th {
+    background: #f2f2f2; /* Fondo de la cabecera */
+    color: #333;
+    font-weight: bold;
+}
+
+/* Botones genéricos (si aparecen en la lista o dashboard) */
 button, input[type="submit"] {
-    background: #28a745;
+    background: #00cba9; /* Usando el verde principal del tema */
     color: white;
     padding: 8px 12px;
     border: none;
     cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s;
 }
 
-button:hover {
-    background: #218838;
+button:hover, input[type="submit"]:hover {
+    background: #00a88d;
 }

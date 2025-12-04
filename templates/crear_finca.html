@@ -2,31 +2,68 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrar Finca</title>
-    <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/styles_formularios.css"> 
 </head>
 
 <body>
-    <h1>Registrar Nueva Finca</h1>
+    
+    <nav class="navbar">
+        <a href="/" class="logo">🐄 Gestión de Ganado</a>
 
-    <form id="fincaForm">
-        <label>Nombre:</label><br>
-        <input type="text" id="nombre" required><br><br>
+        <form class="search-bar" method="get" action="/buscar">
+            <input type="text" name="q" placeholder="Buscar ganado...">
+            <button type="submit">Buscar</button>
+        </form>
 
-        <label>Tamaño (hectáreas):</label><br>
-        <input type="number" id="tamaño" min="1" required><br><br>
+        <ul class="nav-links">
+            <li><a href="/">Inicio</a></li>
+            <li><a href="/crear-finca">Crear Finca</a></li>
+            <li><a href="/ganado/lista">Lista de Ganado</a></li>
+            <li><a href="/ganado/registrar">Registrar</a></li>
+            <li><a href="/dashboard">Dashboard</a></li>
+        </ul>
+    </nav>
+    
+    <div class="main-container">
+        <div class="card">
+            <h1>Registrar Nueva Finca</h1>
 
-        <label>Ubicación:</label><br>
-        <input type="text" id="ubicacion" required><br><br>
+            <form id="fincaForm">
+                
+                <div class="input-group">
+                    <div class="icon-container">
+                        <i class="fa-solid fa-tag"></i>
+                    </div>
+                    <input type="text" id="nombre" placeholder="Nombre de la Finca" required>
+                </div>
 
-        <button type="submit">Registrar</button>
-    </form>
+                <div class="input-group">
+                    <div class="icon-container">
+                        <i class="fa-solid fa-ruler-combined"></i>
+                    </div>
+                    <input type="number" id="tamaño" min="1" placeholder="Tamaño (hectáreas)" required>
+                </div>
 
-    <p id="mensaje"></p>
+                <div class="input-group">
+                    <div class="icon-container">
+                        <i class="fa-solid fa-location-dot"></i>
+                    </div>
+                    <input type="text" id="ubicacion" placeholder="Ubicación" required>
+                </div>
 
+                <button type="submit" class="btn-submit">Registrar</button>
+            </form>
+
+            <p id="mensaje"></p>
+        </div>
+    </div>
+    
     <script>
         const form = document.getElementById("fincaForm");
-
+        // Tu script JS se mantiene igual
         form.addEventListener("submit", async (e) => {
             e.preventDefault();
 
@@ -45,7 +82,11 @@
             });
 
             const result = await response.json();
-            document.getElementById("mensaje").textContent = result.mensaje || "Finca registrada";
+            const mensajeEl = document.getElementById("mensaje");
+            mensajeEl.textContent = result.mensaje || "Finca registrada";
+            
+            mensajeEl.style.color = "#00cba9";
+            mensajeEl.style.marginTop = "15px";
         });
     </script>
 

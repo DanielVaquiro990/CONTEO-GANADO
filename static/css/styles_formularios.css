@@ -1,0 +1,174 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+}
+
+body {
+    background-color: #dcdcdc;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column; /* Cambiamos a columna para apilar Navbar y Contenido */
+}
+
+/* --- ESTILOS DE LA BARRA DE NAVEGACIÓN --- */
+.navbar {
+    background-color: #26282f; /* El mismo oscuro de la tarjeta */
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+.navbar .logo {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.navbar .search-bar {
+    display: flex;
+    gap: 10px;
+}
+
+.navbar .search-bar input {
+    padding: 8px;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+}
+
+.navbar .search-bar button {
+    padding: 8px 15px;
+    background-color: #00cba9; /* Verde del tema */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+.nav-links a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 16px;
+    transition: color 0.3s;
+}
+
+.nav-links a:hover {
+    color: #00cba9;
+}
+
+/* --- CONTENEDOR CENTRAL PARA EL FORMULARIO --- */
+.main-container {
+    flex: 1; /* Ocupa el espacio restante */
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Centra la tarjeta verticalmente en el espacio sobrante */
+    padding: 20px;
+}
+
+/* --- ESTILOS DE LA TARJETA (FORMULARIO) --- */
+.card {
+    background-color: #26282f;
+    width: 100%;
+    max-width: 400px;
+    padding: 40px 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    text-align: center;
+}
+
+.card h1 {
+    color: #ffffff;
+    margin-bottom: 30px;
+    font-size: 26px;
+    position: relative;
+    display: inline-block;
+}
+
+.card h1::after {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 4px;
+    background-color: #00cba9;
+    margin: 8px auto 0 auto;
+    border-radius: 2px;
+}
+
+.input-group {
+    background-color: #383c45;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    padding: 5px;
+}
+
+.icon-container {
+    width: 45px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.icon-container i {
+    color: #00cba9;
+    font-size: 18px;
+}
+
+.input-group input {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #ffffff;
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+}
+
+.input-group input::placeholder {
+    color: #b0b0b0;
+}
+
+/* Quitar flechas del input number */
+.input-group input[type=number]::-webkit-inner-spin-button, 
+.input-group input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+
+.btn-submit {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background-color: #00cba9;
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
+}
+
+.btn-submit:hover {
+    background-color: #00a88d;
+}
+
+#mensaje {
+    font-size: 14px;
+    font-weight: 500;
+}
