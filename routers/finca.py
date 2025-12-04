@@ -1,72 +1,73 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from database import get_db
-from models import Finca
+import models, schemas
 
 router = APIRouter(
     prefix="/fincas",
     tags=["Fincas"]
 )
 
-# Crea finca
-@router.post("/")
-def crear_finca(nombre: str, tamaño: str, ubicacion: str, db: Session = Depends(get_db)):
-    nueva_finca = Finca(nombre=nombre, tamaño=tamaño, ubicacion=ubicacion)
+# Crear finca (usando schema)
+@router.post("/", response_model=schemas.Finca)
+def crear_finca(finca: schemas.FincaCreate, db: Session = Depends(get_db)):
+    nueva_finca = models.Finca(**finca.dict())
     db.add(nueva_finca)
     db.commit()
     db.refresh(nueva_finca)
-    return {"mensaje": "Finca creada correctamente", "finca": nueva_finca}
+    return nueva_finca
 
-# Muestra todas las fincas
-@router.get("/")
+
+# Listar todas las fincas
+@router.get("/", response_model=list[schemas.Finca])
 def listar_fincas(db: Session = Depends(get_db)):
-    fincas = db.query(Finca).all()
-    return fincas
+    return db.query(models.Finca).all()
 
-# Buscar finca por id
-@router.get("/{finca_id}")
+
+# Buscar finca por ID
+@router.get("/{finca_id}", response_model=schemas.Finca)
 def obtener_finca(finca_id: int, db: Session = Depends(get_db)):
-    finca = db.query(Finca).filter(Finca.id == finca_id).first()
+    finca = db.query(models.Finca).filter(models.Finca.id == finca_id).first()
     if not finca:
         raise HTTPException(status_code=404, detail="Finca no encontrada")
     return finca
 
-# Modifica las listas
-@router.put("/{finca_id}")
-def actualizar_finca(finca_id: int, nombre: str, tamaño: str, ubicacion: str, db: Session = Depends(get_db)):
-    finca = db.query(Finca).filter(Finca.id == finca_id).first()
+
+# Actualizar finca completa
+@router.put("/{finca_id}", response_model=schemas.Finca)
+def actualizar_finca(finca_id: int, datos: schemas.FincaCreate, db: Session = Depends(get_db)):
+    finca = db.query(models.Finca).filter(models.Finca.id == finca_id).first()
     if not finca:
         raise HTTPException(status_code=404, detail="Finca no encontrada")
 
-    finca.nombre = nombre
-    finca.tamaño = tamaño
-    finca.ubicacion = ubicacion
+    for key, value in datos.dict().items():
+        setattr(finca, key, value)
+
     db.commit()
     db.refresh(finca)
-    return {"mensaje": "Finca actualizada correctamente", "finca": finca}
+    return finca
 
-# Actualiza
-@router.patch("/{finca_id}")
-def modificar_parcialmente(finca_id: int, nombre: str = None, tamaño: str = None, ubicacion: str = None, db: Session = Depends(get_db)):
-    finca = db.query(Finca).filter(Finca.id == finca_id).first()
+
+# Actualización parcial
+@router.patch("/{finca_id}", response_model=schemas.Finca)
+def modificar_parcialmente(finca_id: int, datos: schemas.FincaCreate, db: Session = Depends(get_db)):
+    finca = db.query(models.Finca).filter(models.Finca.id == finca_id).first()
     if not finca:
         raise HTTPException(status_code=404, detail="Finca no encontrada")
 
-    if nombre:
-        finca.nombre = nombre
-    if tamaño:
-        finca.tamaño = tamaño
-    if ubicacion:
-        finca.ubicacion = ubicacion
+    datos_dict = datos.dict(exclude_unset=True)
+    for key, value in datos_dict.items():
+        setattr(finca, key, value)
 
     db.commit()
     db.refresh(finca)
-    return {"mensaje": "Finca modificada parcialmente", "finca": finca}
+    return finca
 
-# Elimina una finca
+
+# Eliminar finca
 @router.delete("/{finca_id}")
 def eliminar_finca(finca_id: int, db: Session = Depends(get_db)):
-    finca = db.query(Finca).filter(Finca.id == finca_id).first()
+    finca = db.query(models.Finca).filter(models.Finca.id == finca_id).first()
     if not finca:
         raise HTTPException(status_code=404, detail="Finca no encontrada")
 

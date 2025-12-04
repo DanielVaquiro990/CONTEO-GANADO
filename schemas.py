@@ -32,6 +32,16 @@ class Ganado(GanadoBase):
     class Config:
         orm_mode = True
 
+class GanadoUpdate(BaseModel):
+    nombre: str | None = None
+    edad: int | None = None
+    sexo: str | None = None
+    finca_id: int | None = None
+
+    class Config:
+        orm_mode = True
+
+
 #-------Tipo de Animal------
 
 class TipoAnimalBase(BaseModel):

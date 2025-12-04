@@ -1,93 +1,100 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from database import get_db
-from models import Ganado, Finca
+import models, schemas
 
 router = APIRouter(
     prefix="/ganado",
     tags=["Ganado"]
 )
 
-# Crea una cabeza de ganado
-@router.post("/")
-def crear_ganado(nombre: str, edad: int, sexo: str, finca_id: int, db: Session = Depends(get_db)):
-    finca = db.query(Finca).filter(Finca.id == finca_id).first()
+# Crear ganado
+@router.post("/", response_model=schemas.Ganado)
+def crear_ganado(ganado: schemas.GanadoCreate, db: Session = Depends(get_db)):
+
+    # Verificar finca existente
+    finca = db.query(models.Finca).filter(models.Finca.id == ganado.finca_id).first()
     if not finca:
         raise HTTPException(status_code=404, detail="La finca no existe")
 
-    nuevo_ganado = Ganado(nombre=nombre, edad=edad, sexo=sexo, finca_id=finca_id)
+    nuevo_ganado = models.Ganado(**ganado.dict())
     db.add(nuevo_ganado)
     db.commit()
     db.refresh(nuevo_ganado)
-    return {"mensaje": "Ganado creado correctamente", "ganado": nuevo_ganado}
+    return nuevo_ganado
 
-# Muestra todos los ganados
-@router.get("/")
+
+# Listar ganado
+@router.get("/", response_model=list[schemas.Ganado])
 def listar_ganado(db: Session = Depends(get_db)):
-    ganados = db.query(Ganado).all()
-    return ganados
+    return db.query(models.Ganado).all()
 
-# Busca ganado por id
-@router.get("/{ganado_id}")
+
+# Obtener ganado por ID
+@router.get("/{ganado_id}", response_model=schemas.Ganado)
 def obtener_ganado(ganado_id: int, db: Session = Depends(get_db)):
-    ganado = db.query(Ganado).filter(Ganado.id == ganado_id).first()
+    ganado = db.query(models.Ganado).filter(models.Ganado.id == ganado_id).first()
     if not ganado:
         raise HTTPException(status_code=404, detail="Ganado no encontrado")
     return ganado
 
-# Actualiza datos el ganado seleccionado
-@router.put("/{ganado_id}")
-def actualizar_ganado(ganado_id: int, nombre: str, edad: int, sexo: str, finca_id: int, db: Session = Depends(get_db)):
-    ganado = db.query(Ganado).filter(Ganado.id == ganado_id).first()
+
+# Actualizar ganado COMPLETO (PUT)
+@router.put("/{ganado_id}", response_model=schemas.Ganado)
+def actualizar_ganado(
+    ganado_id: int,
+    datos: schemas.GanadoCreate,
+    db: Session = Depends(get_db)
+):
+    ganado = db.query(models.Ganado).filter(models.Ganado.id == ganado_id).first()
     if not ganado:
         raise HTTPException(status_code=404, detail="Ganado no encontrado")
 
-    finca = db.query(Finca).filter(Finca.id == finca_id).first()
+    # Validar finca nueva
+    finca = db.query(models.Finca).filter(models.Finca.id == datos.finca_id).first()
     if not finca:
         raise HTTPException(status_code=404, detail="La finca asignada no existe")
 
-    ganado.nombre = nombre
-    ganado.edad = edad
-    ganado.sexo = sexo
-    ganado.finca_id = finca_id
+    for key, value in datos.dict().items():
+        setattr(ganado, key, value)
+
     db.commit()
     db.refresh(ganado)
-    return {"mensaje": "Ganado actualizado correctamente", "ganado": ganado}
+    return ganado
 
-#Modifica datos del ganado
-@router.patch("/{ganado_id}")
+
+# Actualización parcial (PATCH)
+@router.patch("/{ganado_id}", response_model=schemas.Ganado)
 def modificar_ganado(
     ganado_id: int,
-    nombre: str = None,
-    edad: int = None,
-    sexo: str = None,
-    finca_id: int = None,
+    datos: schemas.GanadoUpdate,  # ← Para PATCH
     db: Session = Depends(get_db)
 ):
-    ganado = db.query(Ganado).filter(Ganado.id == ganado_id).first()
+    ganado = db.query(models.Ganado).filter(models.Ganado.id == ganado_id).first()
     if not ganado:
         raise HTTPException(status_code=404, detail="Ganado no encontrado")
 
-    if nombre:
-        ganado.nombre = nombre
-    if edad:
-        ganado.edad = edad
-    if sexo:
-        ganado.sexo = sexo
-    if finca_id:
-        finca = db.query(Finca).filter(Finca.id == finca_id).first()
+    cambios = datos.dict(exclude_unset=True)
+
+    # Si se envía un finca_id verificar que exista
+    if "finca_id" in cambios:
+        finca = db.query(models.Finca).filter(models.Finca.id == cambios["finca_id"]).first()
         if not finca:
             raise HTTPException(status_code=404, detail="La finca asignada no existe")
-        ganado.finca_id = finca_id
+
+    # Aplicar los cambios
+    for key, value in cambios.items():
+        setattr(ganado, key, value)
 
     db.commit()
     db.refresh(ganado)
-    return {"mensaje": "Ganado modificado correctamente", "ganado": ganado}
+    return ganado
 
-# Elimina la cabeza de ganado
+
+# Eliminar ganado
 @router.delete("/{ganado_id}")
 def eliminar_ganado(ganado_id: int, db: Session = Depends(get_db)):
-    ganado = db.query(Ganado).filter(Ganado.id == ganado_id).first()
+    ganado = db.query(models.Ganado).filter(models.Ganado.id == ganado_id).first()
     if not ganado:
         raise HTTPException(status_code=404, detail="Ganado no encontrado")
 
