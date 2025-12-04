@@ -85,13 +85,38 @@ def actualizar_tipo_animal(tipo_id: int, datos: schemas.TipoAnimalCreate, db: Se
     return tipo
 
 
+# En routers/tipo_animal.py, reemplaza la función existente por esta:
 # Eliminar Tipo de Animal (DELETE API) - URL: /tipos-animales/{tipo_id}
-@router.delete("/{tipo_id}")
+@router.delete("/{tipo_id}") 
 def eliminar_tipo_animal(tipo_id: int, db: Session = Depends(get_db)):
+    
+    # 1. Obtener el Tipo de Animal
     tipo = db.query(models.TipoAnimal).filter(models.TipoAnimal.id == tipo_id).first()
+    
     if not tipo:
-        raise HTTPException(status_code=404, detail="Tipo de animal no encontrado")
+        raise HTTPException(status_code=404, detail="Tipo de Animal no encontrado")
 
+    # 2. 🛑 VERIFICAR GANADO DEPENDIENTE 🛑
+    # Consulta la tabla de Ganado para ver si existe algún animal que use este tipo_animal_id
+    ganado_dependiente = db.query(models.Ganado).filter(
+        models.Ganado.tipo_animal_id == tipo_id
+    ).first() 
+
+    if ganado_dependiente:
+        # Si se encuentra un animal, lanza la excepción HTTP 400 con el mensaje deseado
+        raise HTTPException(
+            status_code=400,
+            detail="No se puede eliminar el tipo de animal porque se está usando."
+        )
+
+    # 3. Si no hay dependencias, proceder con la eliminación
     db.delete(tipo)
-    db.commit()
+    
+    try:
+        db.commit()
+    except Exception as e:
+        db.rollback()
+        # Esto debería ser un error muy raro ahora, pero es bueno manejarlo
+        raise HTTPException(status_code=500, detail=f"Error inesperado al eliminar: {e}")
+        
     return {"mensaje": "Tipo de animal eliminado correctamente"}
