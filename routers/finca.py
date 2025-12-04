@@ -94,16 +94,26 @@ def obtener_finca_api(finca_id: int, db: Session = Depends(get_db)):
 
 
 # Actualizar finca completa (PUT API) - URL: /fincas/{finca_id}
+#FUNCIÓN PUT PARA ACTUALIZAR LA FINCA
 @router.put("/{finca_id}", response_model=schemas.Finca)
 def actualizar_finca(finca_id: int, datos: schemas.FincaCreate, db: Session = Depends(get_db)):
-    finca = db.query(models.Finca).filter(models.Finca.id == finca_id).first()
-    if not finca:
-        raise HTTPException(status_code=404, detail="Finca no encontrada")
+    # ... (código para buscar la finca) ...
 
+    # 2. Actualizar los campos con los nuevos datos
     for key, value in datos.dict().items():
-        setattr(finca, key, value)
+        setattr(finca, key, value) 
 
-    db.commit()
+    # 3. Intentar confirmar la transacción (Persistir los cambios en la DB)
+    try:
+        # 💡 CAMBIO/REFUERZO: Aseguramos que SQLAlchemy sepa que este objeto está 'dirty'
+        db.add(finca) 
+        db.commit() # Escribe los cambios a la base de datos
+    
+    except IntegrityError as e:
+        # ... (manejo de errores de unicidad) ...
+        db.rollback()
+        # ...
+    
     db.refresh(finca)
     return finca
 

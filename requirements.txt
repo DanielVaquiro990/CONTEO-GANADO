@@ -1,6 +1,23 @@
-fastapi #framework principal
-uvicorn[standard] # Servidor ASGI para correr FastApi
-sqlalchemy #ORM para manejar la base de datos SQLite
-pydantic #Validacion de datos y esquemas
-python-multipart #Importante para formularios HTML y subida de archivos
-jinja2 #Renderiza HTML ( formularios, dashboards, web)
+annotated-doc==0.0.4
+annotated-types==0.7.0
+anyio==4.12.0
+click==8.3.1
+fastapi==0.123.5
+h11==0.16.0
+httptools==0.7.1
+idna==3.11
+Jinja2==3.1.6
+MarkupSafe==3.0.3
+pydantic==2.12.5
+pydantic_core==2.41.5
+python-dotenv==1.2.1
+python-multipart==0.0.20
+PyYAML==6.0.3
+SQLAlchemy==2.0.44
+starlette==0.50.0
+typing-inspection==0.4.2
+typing_extensions==4.15.0
+uvicorn==0.38.0
+uvloop==0.22.1
+watchfiles==1.1.1
+websockets==15.0.1

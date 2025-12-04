@@ -1,4 +1,6 @@
 from pydantic import BaseModel
+from typing import Optional
+from datetime import date
 
 #------Finca----
 
@@ -19,7 +21,8 @@ class Finca(FincaBase):
 #-------Ganado------
 class GanadoBase(BaseModel):
     identificacion: str
-    nombre: str
+    nombre: Optional[str] = None
+    fecha_nacimiento: date
     edad: int
     sexo: str
     finca_id: int
@@ -42,6 +45,14 @@ class GanadoUpdate(BaseModel):
     class Config:
         orm_mode = True
 
+
+class GanadoUpdateData(BaseModel):
+    identificacion: str
+    nombre: Optional[str] = None
+    fecha_nacimiento: date
+    sexo: str
+    finca_id: int
+    tipo_animal_id: int
 
 #-------Tipo de Animal------
 

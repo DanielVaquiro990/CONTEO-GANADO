@@ -117,3 +117,37 @@ def eliminar_ganado(ganado_id: int, db: Session = Depends(get_db)):
     db.delete(ganado)
     db.commit()
     return {"mensaje": "Ganado eliminado correctamente"}
+
+# Nueva función para actualizar (PUT) un registro de ganado
+@router.put("/{ganado_id}", response_model=schemas.Ganado)
+def actualizar_ganado(ganado_id: int, datos: schemas.GanadoUpdateData, db: Session = Depends(get_db)):
+    # 1. Buscar el registro existente
+    ganado = db.query(models.Ganado).filter(models.Ganado.id == ganado_id).first()
+    
+    if not ganado:
+        raise HTTPException(status_code=404, detail="Registro de ganado no encontrado")
+
+    # 2. Actualizar los campos con los nuevos datos
+    for key, value in datos.dict().items():
+        setattr(ganado, key, value)
+
+    # 3. Intentar confirmar la transacción (Manejo de errores de unicidad)
+    try:
+        db.commit()
+    except IntegrityError as e:
+        db.rollback() 
+        # Si la identificación es UNIQUE, maneja el error aquí:
+        if 'UNIQUE constraint failed' in str(e) and 'identificacion' in str(e):
+            raise HTTPException(
+                status_code=400,
+                detail=f"La identificación '{datos.identificacion}' ya está en uso por otro animal."
+            )
+        # Manejo de otros errores de integridad (como claves foráneas no válidas)
+        else:
+            raise HTTPException(
+                status_code=400,
+                detail="Error de integridad de datos (Finca o Tipo de Animal no válido)."
+            )
+
+    db.refresh(ganado)
+    return ganado

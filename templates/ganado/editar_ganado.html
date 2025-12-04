@@ -62,3 +62,74 @@
                 <div class="icon-container"><i class="fa-solid fa-cow"></i></div>
                 <select id="tipo_animal_id" required>
                     {% for tipo in tipos_animales %}
+                        <option value="{{ tipo.id }}" 
+                                {% if tipo.id == ganado.tipo_animal_id %}selected{% endif %}>
+                            {{ tipo.nombre }}
+                        </option>
+                    {% endfor %}
+                    </select>
+            </div>
+            
+            <button type="submit" class="btn btn-primary"><i class="fa-solid fa-save"></i> Guardar Cambios</button>
+            <p id="feedback-message" style="margin-top: 15px;"></p>
+        </form>
+
+    </div>
+</div>
+
+{% block scripts %}
+    <script>
+        // JS para manejar la solicitud PUT (Actualización)
+        document.getElementById('editarGanadoForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            
+            const ganadoId = document.getElementById('ganado_id').value;
+            const identificacion = document.getElementById('identificacion').value;
+            const nombre = document.getElementById('nombre').value;
+            const fechaNacimiento = document.getElementById('fecha_nacimiento').value;
+            const sexo = document.getElementById('sexo').value;
+            const fincaId = document.getElementById('finca_id').value;
+            const tipoAnimalId = document.getElementById('tipo_animal_id').value;
+            const feedbackMessage = document.getElementById('feedback-message');
+
+            const datosActualizados = {
+                identificacion: identificacion,
+                nombre: nombre || null, // Envía null si el nombre está vacío
+                fecha_nacimiento: fechaNacimiento,
+                sexo: sexo,
+                finca_id: parseInt(fincaId),
+                tipo_animal_id: parseInt(tipoAnimalId)
+            };
+
+            try {
+                // Envía la petición PUT a /ganado/{ganadoId}
+                const response = await fetch(`/ganado/${ganadoId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(datosActualizados)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    feedbackMessage.textContent = '✅ Animal actualizado correctamente.';
+                    feedbackMessage.style.color = '#28a745';
+                    // Opcional: Redirigir al listado después de un breve momento
+                    // setTimeout(() => { window.location.href = '/ganado/lista'; }, 1500);
+                } else {
+                    // Muestra el error específico del servidor (ej. error de unicidad)
+                    feedbackMessage.textContent = `❌ Error: ${result.detail || 'No se pudo actualizar el animal.'}`;
+                    feedbackMessage.style.color = '#dc3545';
+                }
+            } catch (error) {
+                console.error('Error de red:', error);
+                feedbackMessage.textContent = '❌ Error de conexión con el servidor.';
+                feedbackMessage.style.color = '#dc3545';
+            }
+        });
+    </script>
+{% endblock %}
+
+{% endblock %}

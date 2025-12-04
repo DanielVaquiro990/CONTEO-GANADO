@@ -1,36 +1,37 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ finca.nombre }}</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="/static/css/styles_formulario.css">
-    <style>
-        .detalle-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid #383c45;
-            color: white;
-        }
-        .detalle-item span:first-child {
-            font-weight: bold;
-            color: #b0b0b0;
-        }
-        .detalle-acciones {
-            margin-top: 30px;
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-        }
-    </style>
-</head>
+{% extends "base.html" %}
 
-<body>
-    <nav class="navbar"> 
-        </nav>
+{% block head %}
+    <title>Editar Finca: {{ finca.nombre }}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/styles.css"> 
+{% endblock %}
+
+{% block content %}
+<style>
+    /* Estilos globales para la tarjeta si su fondo es oscuro */
+    .card h1, .card p {
+        color: white !important; /* Asegura que los títulos y párrafos sean blancos */
+    }
     
+    .detalle-item {
+        /* Usamos la misma estructura pero forzamos el color */
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 0;
+        border-bottom: 1px solid #383c45;
+        color: white; /* Esto debería aplicar el color al texto principal del ítem */
+    }
+    .detalle-item span:first-child {
+        font-weight: bold;
+        color: #b0b0b0; /* Mantiene la etiqueta en un gris claro */
+    }
+    /* Asegurar que el segundo span (el valor) sea blanco o muy claro */
+    .detalle-item span:last-child { 
+        color: white !important; 
+    }
+    /* ... (resto de estilos) ... */
+</style>
+
     <div class="main-container">
         <div class="card" style="text-align: left;">
             <h1>Detalle: {{ finca.nombre }}</h1>
@@ -41,7 +42,7 @@
             </div>
             <div class="detalle-item">
                 <span><i class="fa-solid fa-ruler-combined" style="color: #00cba9;"></i> Tamaño:</span>
-                <span>{{ finca.tamaño }} ha</span>
+                <span>{{ finca.tamaño }} hectareas</span>
             </div>
             <div class="detalle-item">
                 <span><i class="fa-solid fa-location-dot" style="color: #00cba9;"></i> Ubicación:</span>
@@ -64,3 +65,5 @@
     
     </body>
 </html>
+
+{% endblock %}

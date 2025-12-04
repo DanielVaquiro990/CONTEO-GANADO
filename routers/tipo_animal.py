@@ -3,6 +3,8 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from database import get_db
 import models, schemas # Importa modelos y esquemas
+from sqlalchemy.exc import IntegrityError # 🛑 IMPORTA ESTO
+
 
 # Inicializar Jinja2Templates
 templates = Jinja2Templates(directory="templates") 
@@ -56,9 +58,32 @@ async def editar_tipo_animal_view(tipo_id: int, request: Request, db: Session = 
 # Crear Tipo de Animal (POST API) - URL: /tipos-animales/
 @router.post("/", response_model=schemas.TipoAnimal)
 def crear_tipo_animal(tipo: schemas.TipoAnimalCreate, db: Session = Depends(get_db)):
+    # Nota: Tu esquema TipoAnimalCreate debe tener solo el campo 'nombre'
+
     nuevo_tipo = models.TipoAnimal(**tipo.dict())
     db.add(nuevo_tipo)
-    db.commit()
+    
+    try:
+        db.commit() # Intentamos confirmar la inserción
+    
+    except IntegrityError as e:
+        db.rollback() # Si hay error, revertimos la sesión
+        
+        # Verificamos si el error es por duplicidad (el constraint UNIQUE)
+        # Esto funciona bien con SQLite y otros DBs
+        if 'UNIQUE constraint failed' in str(e):
+            raise HTTPException(
+                status_code=400,
+                detail=f"El Tipo de Animal con el nombre '{tipo.nombre}' ya existe."
+            )
+        else:
+            # Captura cualquier otro error de integridad (ej: campo NOT NULL faltante)
+            raise HTTPException(
+                status_code=500,
+                detail="Error de integridad de datos inesperado."
+            )
+    
+    # Si el commit fue exitoso, refrescamos y retornamos
     db.refresh(nuevo_tipo)
     return nuevo_tipo
 
