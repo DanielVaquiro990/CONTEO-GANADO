@@ -53,7 +53,7 @@
                     
                     if (response.ok) {
                         document.getElementById(`tipo-${tipoId}`).remove();
-                        feedbackEl.textContent = `✅ Tipo ${tipoNombre} eliminado correctamente.`;
+                        feedbackEl.textContent = `✅ Tipo de animal (${tipoNombre}) eliminado correctamente.`;
                         feedbackEl.style.color = "#00cba9";
                     } else {
                         const error = await response.json();
