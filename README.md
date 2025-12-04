@@ -112,13 +112,13 @@ Sigue estos pasos para configurar y activar el entorno virtual del proyecto:
     source .venv/bin/activate
     ```
 
-**Si sale error al activarlo**
-Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
+**Si sale error al activarlo**  
+Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned  
 
-Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser  
 
-**Para activarlo en Windows**
-.\.venv\Scripts\Activate
+**Para activarlo en Windows**  
+.\.venv\Scripts\Activate 
 ---
 
 ## 🛠 Instalación de Requerimientos
