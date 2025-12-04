@@ -18,6 +18,7 @@ class Finca(FincaBase):
 
 #-------Ganado------
 class GanadoBase(BaseModel):
+    identificacion: str
     nombre: str
     edad: int
     sexo: str

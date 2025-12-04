@@ -5,7 +5,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from fastapi import Request
 
-from database import engine
+from database import Base, engine
 import models
 
 # Routers
@@ -14,7 +14,7 @@ from routers import ganado
 from routers import tipo_animal
 
 # Crear tablas en la base de datos
-models.Base.metadata.create_all(bind=engine)
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="Sistema de Gestión de Ganado",

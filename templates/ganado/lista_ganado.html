@@ -30,8 +30,9 @@
             {% if ganados %}
                 {% for animal in ganados %}
                     <tr id="ganado-{{ animal.id }}">
-                        <td>{{ animal.id }}</td>
-                        <td><a href="/ganado/{{ animal.id }}" style="color: #00cba9; text-decoration: none;">{{ animal.identificacion }}</a></td>
+                        <td>{{ animal.id }}</td> 
+                        
+                        <td><a href="/ganado/detalle/{{ animal.id }}" style="color: #00cba9; text-decoration: none;">{{ animal.identificacion }}</a></td>
                         <td>{{ animal.nombre or 'N/A' }}</td>
                         
                         <td>{{ animal.tipo_animal.nombre }}</td>
@@ -60,12 +61,13 @@
         document.querySelectorAll('.btn-eliminar').forEach(button => {
             button.addEventListener('click', async (e) => {
                 const ganadoId = e.target.getAttribute('data-id');
-                const identificacion = e.target.closest('tr').querySelector('td a').textContent;
+                // Se busca el texto de la identificación en el <td> que contiene el <a>
+                const identificacion = e.target.closest('tr').querySelector('td a').textContent.trim();
 
                 if (confirm(`¿Estás seguro de que quieres eliminar el animal con ID/Arete: ${identificacion}?`)) {
                     
-                    // Llama al endpoint DELETE de la API: /ganado/{ganado_id}
-                    const response = await fetch(`/ganado/${ganadoId}`, { method: 'DELETE' });
+                    // CORRECCIÓN CLAVE: Llama al endpoint DELETE de la API: /ganado/api/{ganado_id}
+                    const response = await fetch(`/ganado/api/${ganadoId}`, { method: 'DELETE' });
                     
                     if (response.ok) {
                         // 1. Elimina la fila de la tabla
@@ -74,7 +76,7 @@
                         feedbackEl.style.color = "#00cba9";
                     } else {
                         const error = await response.json();
-                        feedbackEl.textContent = `❌ Error al eliminar: ${error.detail || response.statusText}`;
+                        feedbackEl.textContent = `❌ Error al eliminar: ${error.mensaje || error.detail || response.statusText}`;
                         feedbackEl.style.color = "#dc3545";
                     }
                 }

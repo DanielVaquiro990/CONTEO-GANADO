@@ -79,32 +79,23 @@
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
 
-        // Obtener la edad como string y verificar que no esté vacía
+        const nombreValor = document.getElementById("nombre").value.trim() || null;
         const edadValue = document.getElementById("edad").value.trim();
         const fincaIdValue = document.getElementById("finca").value;
         const tipoAnimalIdValue = document.getElementById("tipoAnimal").value;
 
-        // Construcción de Data: Asegurar que todos los campos requeridos estén presentes y en el tipo correcto.
         const data = {
             identificacion: document.getElementById("identificacion").value.trim(),
-            // Campo nombre: Si el campo está vacío, enviamos null (asumiendo que es opcional en la API)
-            nombre: document.getElementById("nombre").value.trim() || null, 
+            nombre: nombreValor, 
             fecha_nacimiento: document.getElementById("fechaNacimiento").value,
             sexo: document.getElementById("sexo").value,
             
-            // CORRECCIÓN CLAVE: Usar parseInt() y verificar que el campo no esté vacío
+            // Conversión a enteros (necesario para IDs y edad)
             edad: edadValue ? parseInt(edadValue) : null,
             finca_id: parseInt(fincaIdValue),
             tipo_animal_id: parseInt(tipoAnimalIdValue)
         };
         
-        // Verificar si la conversión a entero resultó en NaN (si el usuario no seleccionó o ingresó algo inválido)
-        if (isNaN(data.edad) || isNaN(data.finca_id) || isNaN(data.tipo_animal_id)) {
-            mensajeEl.textContent = "❌ Error: Debe completar todos los campos de ID (Finca, Tipo, Edad).";
-            mensajeEl.style.color = "#dc3545";
-            return; // Detiene el envío
-        }
-
         // POST a la API: /ganado/api/
         const response = await fetch("/ganado/api/", {
             method: "POST",
@@ -125,22 +116,16 @@
                 if (Array.isArray(responseData.detail)) {
                     errorMessage = responseData.detail
                         .map(err => {
-                            // Se asume que el nombre del campo está en err.loc[1]
                             const field = err.loc && err.loc.length > 1 ? err.loc[1] : 'Campo';
                             return `* ${field}: ${err.msg.replace('field required', 'Campo Requerido')}`;
                         })
                         .join('<br>');
-                    // Usar innerHTML para que <br> funcione
                     mensajeEl.innerHTML = `❌ Error de Validación:<br>${errorMessage}`; 
                 } else {
                     errorMessage = responseData.detail;
                     mensajeEl.textContent = `❌ Error: ${errorMessage}`;
                 }
-            } else if (responseData.message) {
-                errorMessage = responseData.message;
-                mensajeEl.textContent = `❌ Error: ${errorMessage}`;
             }
-            
             mensajeEl.style.color = "#dc3545";
         }
     });
