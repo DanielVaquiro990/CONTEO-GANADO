@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Registrar Finca</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+
+<body>
+    <h1>Registrar Nueva Finca</h1>
+
+    <form id="fincaForm">
+        <label>Nombre:</label><br>
+        <input type="text" id="nombre" required><br><br>
+
+        <label>Tamaño (hectáreas):</label><br>
+        <input type="number" id="tamaño" min="1" required><br><br>
+
+        <label>Ubicación:</label><br>
+        <input type="text" id="ubicacion" required><br><br>
+
+        <button type="submit">Registrar</button>
+    </form>
+
+    <p id="mensaje"></p>
+
+    <script>
+        const form = document.getElementById("fincaForm");
+
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const data = {
+                nombre: document.getElementById("nombre").value,
+                tamaño: parseInt(document.getElementById("tamaño").value),
+                ubicacion: document.getElementById("ubicacion").value
+            };
+
+            const response = await fetch("/fincas/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            });
+
+            const result = await response.json();
+            document.getElementById("mensaje").textContent = result.mensaje || "Finca registrada";
+        });
+    </script>
+
+</body>
+</html>

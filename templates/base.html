@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Ganado</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+
+<nav class="navbar">
+    <a href="/" class="logo">🐄 Gestión de Ganado</a>
+
+    <form class="search-bar" method="get" action="/buscar">
+        <input type="text" name="q" placeholder="Buscar ganado...">
+        <button type="submit">Buscar</button>
+    </form>
+
+    <ul class="nav-links">
+        <li><a href="/crear-finca">Crear Finca</a></li>
+        <li><a href="/ganado/lista">Lista de Ganado</a></li>
+        <li><a href="/ganado/registrar">Registrar</a></li>
+        <li><a href="/dashboard">Dashboard</a></li>
+    </ul>
+</nav>
+
+<div class="container">
+    {% block content %}
+    {% endblock %}
+</div>
+
+</body>
+</html>

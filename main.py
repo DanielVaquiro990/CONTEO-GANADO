@@ -1,5 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
+from fastapi import Request
 
 from database import engine
 import models
@@ -17,6 +21,14 @@ app = FastAPI(
     description="API para administrar fincas, ganado y tipos de ganado",
     version="1.0.0"
 )
+
+#---Templates---
+templates = Jinja2Templates(directory="templates")
+
+#---Statics---
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+
 
 # ============================================================
 #                      CORS (opcional)
@@ -39,6 +51,14 @@ app.include_router(tipo_ganado.router)
 # ============================================================
 #                        RUTA RAÍZ
 # ============================================================
+
 @app.get("/")
-def root():
-    return {"mensaje": "API de gestión de ganado funcionando correctamente"}
+def home(request: Request):
+    return templates.TemplateResponse(
+        "index.html",
+        {"request": request, "mensaje": "Sistema funcionando"}
+    )
+
+@app.get("/crear-finca", response_class=HTMLResponse)
+def form_finca(request: Request):
+    return templates.TemplateResponse("crear_finca.html", {"request": request})
