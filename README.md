@@ -14,17 +14,6 @@
 * **Plantillas (Frontend):** Jinja2 (para renderizar vistas HTML)
 * **Servidor de Desarrollo:** Uvicorn
 
-## 🛠️ Instalación y Configuración Local
-
-Sigue estos pasos para levantar el proyecto en tu máquina local.
-
-### 1. Clonar el Repositorio
-
-
-git clone [https://github.com/tu_usuario/tu_repositorio.git
-https://github.com/tu_usuario/tu_repositorio.git)
-cd tu_repositorio
-
 
 ### 🚜 Logica de Negocio
 
@@ -84,3 +73,69 @@ Modelos de Base de Datos (models.py):
 #### 4. ESTRATEGIA DE DESPLIEGUE
 
 La aplicación se despliega como un Web Service en plataformas PaaS. El comando de inicio es: uvicorn main:app --host 0.0.0.0 --port $PORT.
+
+## 🛠️ Instalación y Configuración Local
+
+### 🧩 1️⃣ Requisitos previos
+
+Antes de iniciar, asegúrate de tener instalado:
+
+- **Python 3.10 o superior**
+- **pip** (administrador de paquetes de Python)
+- Un editor como **VS Code** o **PyCharm**
+
+
+# 🚀 Guía de Inicio Rápido
+
+### 🐍 Activación del Entorno Virtual
+
+Sigue estos pasos para configurar y activar el entorno virtual del proyecto:
+
+1.  **Verifica tu versión de Python:**
+    Asegúrate de tener instalada una versión compatible de Python ejecutando el siguiente comando:
+
+    ```bash
+    python3 --version
+    ```
+
+2.  **Crea el Entorno Virtual:**
+    Crea un entorno virtual llamado `.venv` en la raíz del proyecto:
+
+    ```bash
+    python3 -m venv .venv
+    ```
+
+3.  **Activa el Entorno Virtual:**
+    Activa el entorno virtual con el siguiente comando:
+
+    ```bash
+    source .venv/bin/activate
+    ```
+
+**Si sale error al activarlo**
+Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
+
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+
+**Para activarlo en Windows**
+.\.venv\Scripts\Activate
+---
+
+## 🛠 Instalación de Requerimientos
+
+Con el entorno virtual activado, instala todas las dependencias necesarias:
+
+```bash
+pip install -r requirements.txt
+```
+## ▶️ Ejecución del Sistema
+
+Ya con los requerimientos ejecutados y el entorno activado, podrás iniciar el sistema de la siguiente manera:
+
+```bash
+uvicorn main:app --reload
+```
+
+## 🎉 ¡Disfrutalo!
+
+
