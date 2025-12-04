@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block head %}
+    <title>Editar Ganado: {{ ganado.identificacion }}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/styles_formularios.css"> 
+{% endblock %}
+
+{% block content %}
+
+<div class="main-container">
+    <div class="card">
+        <h1>✏️ Editar Animal: {{ ganado.identificacion }}</h1>
+
+        <form id="editarGanadoForm">
+            
+            <input type="hidden" id="ganado_id" value="{{ ganado.id }}">
+
+            <div class="input-group">
+                <div class="icon-container"><i class="fa-solid fa-barcode"></i></div>
+                <input type="text" id="identificacion" placeholder="Identificación / Arete" required 
+                       value="{{ ganado.identificacion }}">
+            </div>
+
+            <div class="input-group">
+                <div class="icon-container"><i class="fa-solid fa-tag"></i></div>
+                <input type="text" id="nombre" placeholder="Nombre (opcional)" 
+                       value="{{ ganado.nombre or '' }}">
+            </div>
+            
+            <label for="fecha_nacimiento" class="input-label">Fecha de Nacimiento:</label>
+            <div class="input-group">
+                <div class="icon-container"><i class="fa-solid fa-calendar-days"></i></div>
+                <input type="date" id="fecha_nacimiento" required 
+                       value="{{ ganado.fecha_nacimiento }}">
+            </div>
+
+            <label for="sexo" class="input-label">Sexo:</label>
+            <div class="input-group">
+                <div class="icon-container"><i class="fa-solid fa-venus-mars"></i></div>
+                <select id="sexo" required>
+                    <option value="Macho" {% if ganado.sexo == 'Macho' %}selected{% endif %}>Macho</option>
+                    <option value="Hembra" {% if ganado.sexo == 'Hembra' %}selected{% endif %}>Hembra</option>
+                </select>
+            </div>
+
+            <label for="finca_id" class="input-label">Finca Asignada:</label>
+            <div class="input-group">
+                <div class="icon-container"><i class="fa-solid fa-location-dot"></i></div>
+                <select id="finca_id" required>
+                    {% for finca in fincas %}
+                        <option value="{{ finca.id }}" 
+                                {% if finca.id == ganado.finca_id %}selected{% endif %}>
+                            {{ finca.nombre }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <label for="tipo_animal_id" class="input-label">Tipo de Animal:</label>
+            <div class="input-group">
+                <div class="icon-container"><i class="fa-solid fa-cow"></i></div>
+                <select id="tipo_animal_id" required>
+                    {% for tipo in tipos_animales %}

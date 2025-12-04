@@ -44,13 +44,13 @@ class GanadoUpdate(BaseModel):
 
 #-------Tipo de Animal------
 
-class TipoGanadoBase(BaseModel):
+class TipoAnimalBase(BaseModel):
     nombre: str
 
-class TipoGanadoCreate(TipoGanadoBase):
+class TipoAnimalCreate(TipoAnimalBase):
     pass
 
-class TipoGanado(TipoGanadoBase):
+class TipoAnimal(TipoAnimalBase):
     id: int
 
     class Config:

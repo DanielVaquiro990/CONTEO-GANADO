@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block head %}
+    <title>Lista de Ganado</title>
+    <link rel="stylesheet" href="/static/css/styles.css"> 
+{% endblock %}
+
+{% block content %}
+    
+    <h1 style="margin-top: 10px;">📋 Ganado Registrado</h1>
+
+    <p>
+        <a href="/ganado/registrar"><button>+ Registrar Nuevo Animal</button></a>
+        <a href="/fincas/lista"><button style="background-color: #6c757d;">Ver Fincas</button></a>
+    </p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Identificación</th>
+                <th>Nombre</th>
+                <th>Tipo Animal</th>
+                <th>Finca</th>
+                <th>Sexo</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if ganados %}
+                {% for animal in ganados %}
+                    <tr id="ganado-{{ animal.id }}">
+                        <td>{{ animal.id }}</td>
+                        <td><a href="/ganado/{{ animal.id }}" style="color: #00cba9; text-decoration: none;">{{ animal.identificacion }}</a></td>
+                        <td>{{ animal.nombre or 'N/A' }}</td>
+                        
+                        <td>{{ animal.tipo_animal.nombre }}</td>
+                        <td>{{ animal.finca.nombre }}</td>
+                        
+                        <td>{{ animal.sexo }}</td>
+                        <td>
+                            <button onclick="window.location.href='/ganado/editar/{{ animal.id }}'">Editar</button>
+                            <button class="btn-eliminar" data-id="{{ animal.id }}" style="background-color: #dc3545;">Eliminar</button>
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="7" style="text-align: center;">Aún no hay ganado registrado.</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+    
+    <p id="mensaje-feedback" style="text-align: center; margin-top: 15px;"></p>
+
+    <script>
+        const feedbackEl = document.getElementById("mensaje-feedback");
+
+        document.querySelectorAll('.btn-eliminar').forEach(button => {
+            button.addEventListener('click', async (e) => {
+                const ganadoId = e.target.getAttribute('data-id');
+                const identificacion = e.target.closest('tr').querySelector('td a').textContent;
+
+                if (confirm(`¿Estás seguro de que quieres eliminar el animal con ID/Arete: ${identificacion}?`)) {
+                    
+                    // Llama al endpoint DELETE de la API: /ganado/{ganado_id}
+                    const response = await fetch(`/ganado/${ganadoId}`, { method: 'DELETE' });
+                    
+                    if (response.ok) {
+                        // 1. Elimina la fila de la tabla
+                        document.getElementById(`ganado-${ganadoId}`).remove();
+                        feedbackEl.textContent = `✅ Animal ${identificacion} eliminado correctamente.`;
+                        feedbackEl.style.color = "#00cba9";
+                    } else {
+                        const error = await response.json();
+                        feedbackEl.textContent = `❌ Error al eliminar: ${error.detail || response.statusText}`;
+                        feedbackEl.style.color = "#dc3545";
+                    }
+                }
+            });
+        });
+    </script>
+
+{% endblock %}

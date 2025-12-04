@@ -9,18 +9,29 @@
 <body>
 
 <nav class="navbar">
-    <a href="/" class="logo">🐄 Gestión de Ganado</a>
-
-    <form class="search-bar" method="get" action="/buscar">
-        <input type="text" name="q" placeholder="Buscar ganado...">
-        <button type="submit">Buscar</button>
-    </form>
-
+    <div class="logo">Mi App Ganadera</div>
     <ul class="nav-links">
         <li><a href="/">Inicio</a></li>
-        <li><a href="/fincas/crear">Crear Finca</a></li>
-        <li><a href="/fincas/lista">Lista de Fincas</a></li>
-    </ul>
+
+        <li class="dropdown">
+            <a href="#" class="dropbtn">📋 Listados <i class="fa-solid fa-caret-down"></i></a>
+            <div class="dropdown-content">
+                <a href="/fincas/lista">Listado de Fincas</a>
+                <a href="/ganado/lista">Listado de Ganado</a>
+                <a href="/tipos-animales/lista">Listado de Tipos</a>
+            </div>
+        </li>
+
+        <li class="dropdown">
+            <a href="#" class="dropbtn">➕ Registrar <i class="fa-solid fa-caret-down"></i></a>
+            <div class="dropdown-content">
+                <a href="/fincas/crear">Registrar Finca</a>
+                <a href="/ganado/registrar">Registrar Ganado</a>
+                <a href="/tipos-animales/crear">Registrar Tipo</a>
+            </div>
+        </li>
+        
+        </ul>
 </nav>
 
 <div class="container">

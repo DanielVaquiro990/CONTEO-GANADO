@@ -21,8 +21,6 @@ router = APIRouter(
 @router.get("/registrar") 
 async def registrar_ganado_view(request: Request, db: Session = Depends(get_db)):
     """Muestra el formulario, cargando fincas y tipos de animales para los selects."""
-    
-    # Consulta los recursos necesarios para los selects del formulario
     fincas = db.query(models.Finca).all()
     tipos_animales = db.query(models.TipoAnimal).all()
     
@@ -40,10 +38,7 @@ async def registrar_ganado_view(request: Request, db: Session = Depends(get_db))
 @router.get("/lista")
 async def listar_ganado_view(request: Request, db: Session = Depends(get_db)):
     """Muestra la tabla de todo el ganado registrado, consultando la BD."""
-    
-    # Consulta que incluye las relaciones para mostrar en la tabla
     ganados = db.query(models.Ganado).all()
-    
     return templates.TemplateResponse(
         "ganado/lista_ganado.html",
         {"request": request, "ganados": ganados}
@@ -54,12 +49,10 @@ async def listar_ganado_view(request: Request, db: Session = Depends(get_db)):
 @router.get("/editar/{ganado_id}")
 async def editar_ganado_view(ganado_id: int, request: Request, db: Session = Depends(get_db)):
     """Muestra el formulario de edición, precargando datos y listas de opciones."""
-    
     ganado = db.query(models.Ganado).filter(models.Ganado.id == ganado_id).first()
     if not ganado:
         raise HTTPException(status_code=404, detail="Ganado no encontrado")
         
-    # Consulta los recursos necesarios para los selects del formulario de edición
     fincas = db.query(models.Finca).all()
     tipos_animales = db.query(models.TipoAnimal).all()
     
@@ -74,12 +67,10 @@ async def editar_ganado_view(ganado_id: int, request: Request, db: Session = Dep
     )
 
 # 4. Muestra el detalle de un animal
-# URL: /ganado/{ganado_id}
-# Nota: Esta ruta debe ir antes de cualquier GET de la API que use la misma URL
-@router.get("/{ganado_id}")
+# URL: /ganado/detalle/{ganado_id}
+@router.get("/detalle/{ganado_id}") # RUTA HTML MODIFICADA para evitar conflicto con la API
 async def detalle_ganado_view(ganado_id: int, request: Request, db: Session = Depends(get_db)):
     """Muestra el detalle de un animal específico."""
-    
     ganado = db.query(models.Ganado).filter(models.Ganado.id == ganado_id).first()
     if not ganado:
         raise HTTPException(status_code=404, detail="Ganado no encontrado")
@@ -90,17 +81,23 @@ async def detalle_ganado_view(ganado_id: int, request: Request, db: Session = De
     )
 
 # ============================================================
-#                   RUTAS DE LA API (CRUD EXISTENTE)
+#                   RUTAS DE LA API (CRUD - JSON)
 # ============================================================
 
-# Crear ganado (POST API) - URL: /ganado/
-@router.post("/", response_model=schemas.Ganado)
+# Crear ganado (POST API) - URL: /ganado/api/
+@router.post("/api/", response_model=schemas.Ganado)
 def crear_ganado(ganado: schemas.GanadoCreate, db: Session = Depends(get_db)):
-
     # Verificar finca existente
     finca = db.query(models.Finca).filter(models.Finca.id == ganado.finca_id).first()
     if not finca:
         raise HTTPException(status_code=404, detail="La finca no existe")
+        
+    # Verificar TipoAnimal existente (asumiendo que es requerido)
+    tipo_animal = db.query(models.TipoAnimal).filter(models.TipoAnimal.id == ganado.tipo_animal_id).first()
+    if not tipo_animal:
+         raise HTTPException(status_code=404, detail="El Tipo de Animal no existe")
+
+    # (Nota: Aquí se puede añadir verificación de identificación duplicada)
 
     nuevo_ganado = models.Ganado(**ganado.dict())
     db.add(nuevo_ganado)
@@ -110,13 +107,13 @@ def crear_ganado(ganado: schemas.GanadoCreate, db: Session = Depends(get_db)):
 
 
 # Listar ganado (GET API) - URL: /ganado/api/
-@router.get("/api/", response_model=list[schemas.Ganado]) # RUTA MODIFICADA para evitar conflicto
+@router.get("/api/", response_model=list[schemas.Ganado]) 
 def listar_ganado_api(db: Session = Depends(get_db)):
     return db.query(models.Ganado).all()
 
 
-# Obtener ganado por ID (GET API) - URL: /ganado/{ganado_id}
-@router.get("/{ganado_id}", response_model=schemas.Ganado)
+# Obtener ganado por ID (GET API) - URL: /ganado/api/{ganado_id}
+@router.get("/api/{ganado_id}", response_model=schemas.Ganado) # RUTA CORREGIDA
 def obtener_ganado_api(ganado_id: int, db: Session = Depends(get_db)):
     ganado = db.query(models.Ganado).filter(models.Ganado.id == ganado_id).first()
     if not ganado:
@@ -124,8 +121,8 @@ def obtener_ganado_api(ganado_id: int, db: Session = Depends(get_db)):
     return ganado
 
 
-# Actualizar ganado COMPLETO (PUT) - URL: /ganado/{ganado_id}
-@router.put("/{ganado_id}", response_model=schemas.Ganado)
+# Actualizar ganado COMPLETO (PUT) - URL: /ganado/api/{ganado_id}
+@router.put("/api/{ganado_id}", response_model=schemas.Ganado) # RUTA CORREGIDA
 def actualizar_ganado(
     ganado_id: int,
     datos: schemas.GanadoCreate,
@@ -140,6 +137,11 @@ def actualizar_ganado(
     if not finca:
         raise HTTPException(status_code=404, detail="La finca asignada no existe")
 
+    # Validar TipoAnimal nuevo
+    tipo_animal = db.query(models.TipoAnimal).filter(models.TipoAnimal.id == datos.tipo_animal_id).first()
+    if not tipo_animal:
+         raise HTTPException(status_code=404, detail="El Tipo de Animal asignado no existe")
+
     for key, value in datos.dict().items():
         setattr(ganado, key, value)
 
@@ -148,8 +150,8 @@ def actualizar_ganado(
     return ganado
 
 
-# Actualización parcial (PATCH) - URL: /ganado/{ganado_id}
-@router.patch("/{ganado_id}", response_model=schemas.Ganado)
+# Actualización parcial (PATCH) - URL: /ganado/api/{ganado_id}
+@router.patch("/api/{ganado_id}", response_model=schemas.Ganado) # RUTA CORREGIDA
 def modificar_ganado(
     ganado_id: int,
     datos: schemas.GanadoUpdate,
@@ -167,6 +169,12 @@ def modificar_ganado(
         if not finca:
             raise HTTPException(status_code=404, detail="La finca asignada no existe")
 
+    # Si se envía un tipo_animal_id verificar que exista
+    if "tipo_animal_id" in cambios:
+        tipo_animal = db.query(models.TipoAnimal).filter(models.TipoAnimal.id == cambios["tipo_animal_id"]).first()
+        if not tipo_animal:
+            raise HTTPException(status_code=404, detail="El Tipo de Animal asignado no existe")
+
     # Aplicar los cambios
     for key, value in cambios.items():
         setattr(ganado, key, value)
@@ -176,8 +184,8 @@ def modificar_ganado(
     return ganado
 
 
-# Eliminar ganado (DELETE API) - URL: /ganado/{ganado_id}
-@router.delete("/{ganado_id}")
+# Eliminar ganado (DELETE API) - URL: /ganado/api/{ganado_id}
+@router.delete("/api/{ganado_id}") # RUTA CORREGIDA
 def eliminar_ganado(ganado_id: int, db: Session = Depends(get_db)):
     ganado = db.query(models.Ganado).filter(models.Ganado.id == ganado_id).first()
     if not ganado:

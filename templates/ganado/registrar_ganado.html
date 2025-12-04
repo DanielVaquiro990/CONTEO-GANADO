@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+
+{% block head %}
+    <title>Registrar Ganado</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/styles_formularios.css"> 
+{% endblock %}
+
+{% block content %}
+<div class="main-container">
+    <div class="card">
+        <h1><i class="fa-solid fa-cow"></i> Registrar Nuevo Animal</h1>
+        <p class="form-message">Ingrese la información detallada del animal.</p>
+
+        <form id="registroGanadoForm">
+            
+            <label for="identificacion">Identificación / Arete:</label>
+            <div class="input-group">
+                <div class="icon-container"><i class="fa-solid fa-tag"></i></div>
+                <input type="text" id="identificacion" placeholder="Identificación / Arete" required>
+            </div>
+
+            <label for="nombre">Nombre (opcional):</label>
+            <div class="input-group">
+                <div class="icon-container"><i class="fa-solid fa-pen-to-square"></i></div>
+                <input type="text" id="nombre" placeholder="Nombre (opcional)">
+            </div>
+            
+            <label for="fechaNacimiento">Fecha de Nacimiento:</label>
+            <div class="input-group">
+                <input type="date" id="fechaNacimiento" required> 
+            </div>
+
+            <label for="edad">Edad (en meses):</label>
+            <div class="input-group">
+                <div class="icon-container"><i class="fa-solid fa-clock"></i></div>
+                <input type="number" id="edad" placeholder="Edad en meses" required min="0">
+            </div>
+
+            <label for="sexo">Sexo:</label>
+            <div class="input-group select-wrapper"> 
+                <select id="sexo" required>
+                    <option value="" disabled selected>Selecciona el Sexo</option>
+                    <option value="Macho">Macho</option>
+                    <option value="Hembra">Hembra</option>
+                </select>
+            </div>
+            
+            <label for="finca">Finca Asignada:</label>
+            <div class="input-group select-wrapper"> 
+                <select id="finca" required>
+                    <option value="" disabled selected>Selecciona la Finca</option>
+                    {% for finca in fincas %}
+                        <option value="{{ finca.id }}">{{ finca.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <label for="tipoAnimal">Tipo de Animal:</label>
+            <div class="input-group select-wrapper"> 
+                <select id="tipoAnimal" required>
+                    <option value="" disabled selected>Selecciona el Tipo</option>
+                    {% for tipo in tipos_animales %}
+                        <option value="{{ tipo.id }}">{{ tipo.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <button type="submit" class="btn-submit">Registrar Ganado</button>
+        </form>
+        <p id="mensaje" style="margin-top: 15px; text-align: center;"></p>
+    </div>
+</div>
+
+<script>
+    const form = document.getElementById("registroGanadoForm");
+    const mensajeEl = document.getElementById("mensaje");
+
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        // Obtener la edad como string y verificar que no esté vacía
+        const edadValue = document.getElementById("edad").value.trim();
+        const fincaIdValue = document.getElementById("finca").value;
+        const tipoAnimalIdValue = document.getElementById("tipoAnimal").value;
+
+        // Construcción de Data: Asegurar que todos los campos requeridos estén presentes y en el tipo correcto.
+        const data = {
+            identificacion: document.getElementById("identificacion").value.trim(),
+            // Campo nombre: Si el campo está vacío, enviamos null (asumiendo que es opcional en la API)
+            nombre: document.getElementById("nombre").value.trim() || null, 
+            fecha_nacimiento: document.getElementById("fechaNacimiento").value,
+            sexo: document.getElementById("sexo").value,
+            
+            // CORRECCIÓN CLAVE: Usar parseInt() y verificar que el campo no esté vacío
+            edad: edadValue ? parseInt(edadValue) : null,
+            finca_id: parseInt(fincaIdValue),
+            tipo_animal_id: parseInt(tipoAnimalIdValue)
+        };
+        
+        // Verificar si la conversión a entero resultó en NaN (si el usuario no seleccionó o ingresó algo inválido)
+        if (isNaN(data.edad) || isNaN(data.finca_id) || isNaN(data.tipo_animal_id)) {
+            mensajeEl.textContent = "❌ Error: Debe completar todos los campos de ID (Finca, Tipo, Edad).";
+            mensajeEl.style.color = "#dc3545";
+            return; // Detiene el envío
+        }
+
+        // POST a la API: /ganado/api/
+        const response = await fetch("/ganado/api/", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+        });
+
+        if (response.ok) {
+            const result = await response.json();
+            mensajeEl.textContent = `✅ Animal "${result.identificacion}" registrado con éxito.`;
+            mensajeEl.style.color = "#00cba9";
+            form.reset(); 
+        } else {
+            const responseData = await response.json();
+            let errorMessage = "Error desconocido al registrar el ganado.";
+
+            if (responseData.detail) {
+                if (Array.isArray(responseData.detail)) {
+                    errorMessage = responseData.detail
+                        .map(err => {
+                            // Se asume que el nombre del campo está en err.loc[1]
+                            const field = err.loc && err.loc.length > 1 ? err.loc[1] : 'Campo';
+                            return `* ${field}: ${err.msg.replace('field required', 'Campo Requerido')}`;
+                        })
+                        .join('<br>');
+                    // Usar innerHTML para que <br> funcione
+                    mensajeEl.innerHTML = `❌ Error de Validación:<br>${errorMessage}`; 
+                } else {
+                    errorMessage = responseData.detail;
+                    mensajeEl.textContent = `❌ Error: ${errorMessage}`;
+                }
+            } else if (responseData.message) {
+                errorMessage = responseData.message;
+                mensajeEl.textContent = `❌ Error: ${errorMessage}`;
+            }
+            
+            mensajeEl.style.color = "#dc3545";
+        }
+    });
+</script>
+
+{% endblock %}

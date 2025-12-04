@@ -11,7 +11,7 @@ import models
 # Routers
 from routers import finca
 from routers import ganado
-from routers import tipo_ganado
+from routers import tipo_animal
 
 # Crear tablas en la base de datos
 models.Base.metadata.create_all(bind=engine)
@@ -46,7 +46,7 @@ app.add_middleware(
 # ============================================================
 app.include_router(finca.router)
 app.include_router(ganado.router)
-app.include_router(tipo_ganado.router)
+app.include_router(tipo_animal.router)
 
 
 

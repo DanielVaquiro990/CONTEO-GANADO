@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block head %}
+    <title>Detalle del Animal: {{ ganado.identificacion }}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/styles_formularios.css"> 
+{% endblock %}
+
+{% block content %}
+
+<div class="main-container">
+    <div class="card detalle-card">
+        
+        <h1 class="card-title">🐂 Detalle del Animal: {{ ganado.identificacion }}</h1>
+
+        <div class="detalle-group">
+            <p><i class="fa-solid fa-tag"></i> <strong>Nombre:</strong> {{ ganado.nombre or 'N/A' }}</p>
+            <p><i class="fa-solid fa-id-badge"></i> <strong>ID Interno:</strong> {{ ganado.id }}</p>
+            <p><i class="fa-solid fa-barcode"></i> <strong>Identificación/Arete:</strong> {{ ganado.identificacion }}</p>
+            <p><i class="fa-solid fa-calendar-days"></i> <strong>Fecha de Nacimiento:</strong> {{ ganado.fecha_nacimiento }}</p>
+            <p><i class="fa-solid fa-venus-mars"></i> <strong>Sexo:</strong> {{ ganado.sexo }}</p>
+        </div>
+
+        <hr>
+
+        <div class="detalle-group">
+            <h3>Asignación</h3>
+            {% if ganado.finca %}
+                <p><i class="fa-solid fa-location-dot"></i> <strong>Finca Asignada:</strong> <a href="/fincas/{{ ganado.finca.id }}" style="color: #00cba9; text-decoration: none;">{{ ganado.finca.nombre }}</a></p>
+            {% else %}
+                 <p><i class="fa-solid fa-location-dot"></i> <strong>Finca Asignada:</strong> <span style="color: #dc3545;">No asignada</span></p>
+            {% endif %}
+
+            {% if ganado.tipo_animal %}
+                <p><i class="fa-solid fa-cow"></i> <strong>Tipo de Animal:</strong> {{ ganado.tipo_animal.nombre }}</p>
+            {% else %}
+                <p><i class="fa-solid fa-cow"></i> <strong>Tipo de Animal:</strong> <span style="color: #dc3545;">No definido</span></p>
+            {% endif %}
+        </div>
+
+        <hr>
+
+        <div class="detalle-acciones">
+            <button onclick="window.location.href='/ganado/editar/{{ ganado.id }}'" style="background-color: #007bff;">
+                <i class="fa-solid fa-pen"></i> Editar
+            </button>
+            
+            <button class="btn-eliminar" data-id="{{ ganado.id }}" style="background-color: #dc3545;">
+                <i class="fa-solid fa-trash-can"></i> Eliminar
+            </button>
+
+            <button onclick="window.location.href='/ganado/lista'" style="background-color: #6c757d;">
+                <i class="fa-solid fa-arrow-left"></i> Volver a Lista
+            </button>
+        </div>
+        
+        <p id="mensaje-feedback" style="text-align: center; margin-top: 15px;"></p>
+    </div>
+</div>
+
+<script>
+    const feedbackEl = document.getElementById("mensaje-feedback");
+    const eliminarBtn = document.querySelector('.btn-eliminar');
+
+    eliminarBtn.addEventListener('click', async (e) => {
+        const ganadoId = e.target.getAttribute('data-id');
+        const identificacion = document.querySelector('.card-title').textContent.replace('🐂 Detalle del Animal: ', '').trim();
+
+        if (confirm(`¿Estás seguro de que quieres eliminar al animal ${identificacion}? Esta acción es irreversible.`)) {
+            
+            const response = await fetch(`/ganado/${ganadoId}`, { method: 'DELETE' });
+            
+            if (response.ok) {
+                feedbackEl.textContent = `✅ Animal ${identificacion} eliminado correctamente. Redirigiendo...`;
+                feedbackEl.style.color = "#00cba9";
+                
+                // Redirige al usuario a la lista después de 2 segundos
+                setTimeout(() => {
+                    window.location.href = '/ganado/lista';
+                }, 2000); 
+
+            } else {
+                const error = await response.json();
+                feedbackEl.textContent = `❌ Error al eliminar: ${error.detail || response.statusText}`;
+                feedbackEl.style.color = "#dc3545";
+            }
+        }
+    });
+</script>
+
+{% endblock %}

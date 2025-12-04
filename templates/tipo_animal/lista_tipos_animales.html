@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block content %}
+    
+    <h1 style="margin-top: 10px;">📋 Tipos de Animales</h1>
+
+    <p>
+        <a href="/tipos-animales/crear"><button>+ Registrar Nuevo Tipo</button></a>
+    </p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if tipos %}
+                {% for tipo in tipos %}
+                    <tr id="tipo-{{ tipo.id }}">
+                        <td>{{ tipo.id }}</td>
+                        <td>{{ tipo.nombre }}</td>
+                        <td>
+                            <button onclick="window.location.href='/tipos-animales/editar/{{ tipo.id }}'">Editar</button>
+                            <button class="btn-eliminar" data-id="{{ tipo.id }}" data-nombre="{{ tipo.nombre }}" style="background-color: #dc3545;">Eliminar</button>
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="3" style="text-align: center;">No hay tipos de animales registrados.</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+    
+    <p id="mensaje-feedback" style="text-align: center; margin-top: 15px;"></p>
+
+    <script>
+        const feedbackEl = document.getElementById("mensaje-feedback");
+
+        document.querySelectorAll('.btn-eliminar').forEach(button => {
+            button.addEventListener('click', async (e) => {
+                const tipoId = e.target.getAttribute('data-id');
+                const tipoNombre = e.target.getAttribute('data-nombre');
+
+                if (confirm(`¿Estás seguro de que quieres eliminar el tipo: ${tipoNombre}?`)) {
+                    
+                    // Llama al endpoint DELETE de la API: /tipos-animales/{tipo_id}
+                    const response = await fetch(`/tipos-animales/${tipoId}`, { method: 'DELETE' });
+                    
+                    if (response.ok) {
+                        document.getElementById(`tipo-${tipoId}`).remove();
+                        feedbackEl.textContent = `✅ Tipo ${tipoNombre} eliminado correctamente.`;
+                        feedbackEl.style.color = "#00cba9";
+                    } else {
+                        const error = await response.json();
+                        feedbackEl.textContent = `❌ Error al eliminar: ${error.detail || response.statusText}`;
+                        feedbackEl.style.color = "#dc3545";
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock %}

@@ -11,15 +11,18 @@
 body {
     background-color: #dcdcdc; /* Fondo gris claro general */
     min-height: 100vh;
+    /* Configuración para centrar el formulario: */
+    display: flex;
+    flex-direction: column; 
 }
 
-/* --- ESTILOS DE LA BARRA DE NAVEGACIÓN (IDÉNTICOS AL FORMULARIO) --- */
+/* --- ESTILOS DE LA BARRA DE NAVEGACIÓN (Navbar) --- */
 .navbar {
-    background-color: #26282f; /* Fondo oscuro (el mismo de la tarjeta) */
+    background-color: #26282f; /* Fondo oscuro */
     padding: 15px 30px;
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: center; /* Centra verticalmente los elementos flex */
     box-shadow: 0 2px 10px rgba(0,0,0,0.3);
 }
 
@@ -30,7 +33,7 @@ body {
     font-size: 20px;
 }
 
-/* Estilos de la barra de búsqueda dentro de la navbar */
+/* Barra de búsqueda */
 .navbar .search-bar {
     display: flex;
     gap: 10px;
@@ -41,14 +44,13 @@ body {
     border-radius: 5px;
     border: none;
     outline: none;
-    /* Estilos adicionales para que se vea bien sobre el fondo oscuro */
     background-color: #383c45; 
     color: #ffffff;
 }
 
 .navbar .search-bar button {
     padding: 8px 15px;
-    background-color: #00cba9; /* Verde del tema */
+    background-color: #00cba9; 
     color: white;
     border: none;
     border-radius: 5px;
@@ -60,37 +62,100 @@ body {
     background-color: #00a88d;
 }
 
+/* Enlaces principales (ul) */
 .nav-links {
     list-style: none;
     display: flex;
     gap: 20px;
 }
 
-.nav-links a {
+/* Selector de primer nivel (Inicio, Listados, Registrar) - ALINEACIÓN CORREGIDA */
+.nav-links > li > a {
     color: #ffffff;
     text-decoration: none;
     font-size: 16px;
     transition: color 0.3s;
+    /* Quitamos el padding vertical para que el navbar lo centre */
+    padding: 0 10px; 
+    display: block; 
 }
 
-.nav-links a:hover {
-    color: #00cba9; /* Resaltado verde */
+.nav-links > li > a:hover {
+    color: #00cba9; 
 }
-/* --- FIN ESTILOS NAVBAR --- */
 
-/* Contenedor principal de la página de inicio */
+/* --- ESTILOS DEL MENÚ DESPLEGABLE --- */
+.dropdown {
+    position: relative; 
+    padding: 0; 
+}
+
+.dropbtn {
+    display: block; 
+    text-decoration: none;
+    color: #ffffff;
+    transition: color 0.3s;
+}
+
+.dropdown-content {
+    display: none; 
+    position: absolute;
+    background-color: #383c45;
+    min-width: 180px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.5);
+    z-index: 100;
+    top: 100%; 
+    left: 0;
+    border-radius: 0 0 5px 5px;
+    margin-top: 1px;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown-content a {
+    color: #ffffff;
+    padding: 10px 15px;
+    display: block; 
+    text-align: left;
+    white-space: nowrap;
+    font-size: 15px;
+}
+
+.dropdown-content a:hover {
+    background-color: #00cba9;
+    color: #26282f;
+}
+
+.dropdown:hover > .dropbtn {
+    color: #00cba9;
+}
+
+.dropbtn i {
+    margin-left: 5px;
+    transition: transform 0.3s ease;
+    font-size: 12px;
+}
+
+.dropdown:hover .dropbtn i {
+    transform: rotate(180deg);
+}
+
+/* --- FIN ESTILOS DEL MENÚ DESPLEGABLE --- */
+
+/* --- ESTILOS GENERALES Y TABLAS --- */
 .container {
     padding: 30px;
 }
 
-/* --- ESTILOS DE TABLAS Y BOTONES (Adaptados al tema verde/oscuro) --- */
 table {
     width: 100%;
     border-collapse: collapse;
     background: white;
     box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     border-radius: 8px;
-    overflow: hidden; /* Para que las esquinas redondeadas apliquen */
+    overflow: hidden;
 }
 
 table th, table td {
@@ -100,14 +165,14 @@ table th, table td {
 }
 
 table th {
-    background: #f2f2f2; /* Fondo de la cabecera */
+    background: #f2f2f2;
     color: #333;
     font-weight: bold;
 }
 
-/* Botones genéricos (si aparecen en la lista o dashboard) */
+/* Botones genéricos */
 button, input[type="submit"] {
-    background: #00cba9; /* Usando el verde principal del tema */
+    background: #00cba9; 
     color: white;
     padding: 8px 12px;
     border: none;
@@ -118,4 +183,195 @@ button, input[type="submit"] {
 
 button:hover, input[type="submit"]:hover {
     background: #00a88d;
+}
+
+/* --- ESTILOS DE LA TARJETA DE FORMULARIO --- */
+
+/* Contenedor que centra la tarjeta */
+.main-container {
+    flex: 1; 
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    padding: 20px;
+}
+
+.card {
+    background-color: #26282f;
+    width: 100%;
+    max-width: 400px;
+    padding: 40px 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    text-align: center;
+}
+
+/* Título y su subrayado verde */
+.card h1 {
+    color: #ffffff;
+    margin-bottom: 30px;
+    font-size: 26px;
+    position: relative;
+    display: inline-block;
+}
+
+.card h1::after {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 4px;
+    background-color: #00cba9;
+    margin: 8px auto 0 auto;
+    border-radius: 2px;
+}
+
+/* --- CORRECCIONES DE FORMULARIO (ETIQUETAS Y SELECTORES) --- */
+
+/* Estilos para las etiquetas y títulos de campo (Alineación a la izquierda) */
+.card label,
+.card .field-title {
+    color: #ffffff; 
+    font-size: 14px;
+    font-weight: 500;
+    text-align: left; 
+    display: block;
+    margin-bottom: 5px; 
+    margin-top: 10px; 
+    padding: 0 5px; 
+}
+
+/* Forzar alineación de los contenidos del formulario a la izquierda */
+.card form {
+    text-align: left; 
+}
+
+/* Contenedor principal de los campos de entrada */
+.input-group {
+    background-color: #383c45;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    padding: 5px;
+}
+
+.icon-container {
+    width: 45px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.icon-container i {
+    color: #00cba9;
+    font-size: 18px;
+}
+
+/* Estilos de INPUTS */
+.input-group input {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #ffffff;
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+}
+
+.input-group input::placeholder {
+    color: #b0b0b0;
+}
+
+/* Quitar flechas del input number */
+.input-group input[type=number]::-webkit-inner-spin-button, 
+.input-group input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+
+/* Estilos de SELECTORES */
+.input-group select {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #ffffff;
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    
+    /* Personalización para ocultar la flecha por defecto */
+    -webkit-appearance: none; 
+    -moz-appearance: none;    
+    appearance: none;         
+    
+    /* Estilos de caja */
+    background-color: #383c45; 
+    border-radius: 5px;
+    margin: -5px; /* Compensa el padding del .input-group */
+    padding: 15px; /* Altura uniforme */
+    line-height: 1; 
+}
+
+/* Estilos para las opciones dentro del selector */
+.input-group select option {
+    background-color: #383c45;
+    color: #ffffff;
+    padding: 10px;
+}
+
+/* Wrapper para el SELECT que permite poner la flecha personalizada */
+.input-group.select-wrapper {
+    position: relative;
+    padding: 0; /* Quitamos el padding del .input-group */
+    margin-bottom: 20px;
+}
+
+/* Colocar la flecha personalizada */
+.input-group.select-wrapper::after {
+    content: '\f078'; /* Ícono de flecha (requiere Font Awesome) */
+    font-family: 'Font Awesome 5 Free'; 
+    font-weight: 900;
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    transform: translateY(-50%);
+    color: #00cba9; 
+    pointer-events: none; 
+    font-size: 12px;
+}
+
+/* Botón de envío */
+.btn-submit {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background-color: #00cba9;
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
+}
+
+.btn-submit:hover {
+    background-color: #00a88d;
+}
+
+#mensaje {
+    font-size: 14px;
+    font-weight: 500;
+    color: #ffffff;
+}
+
+/* Estilo para mensajes de introducción o indicaciones al inicio del formulario */
+.form-message {
+    color: #ffffff; /* Color gris claro para contraste sutil sobre el fondo oscuro */
+    font-size: 14px;
+    margin-bottom: 25px; 
+    text-align: center; 
+    padding: 0 10px;
 }

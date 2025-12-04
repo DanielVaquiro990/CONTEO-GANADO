@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="main-container">
+    <div class="card">
+        <h1><i class="fa-solid fa-cow"></i> Registrar Tipo de Animal</h1>
+        <p class="form-message">Ingrese el nombre del nuevo tipo de animal para ingresarlo al catálogo.</p>
+        
+        <form id="tipoAnimalForm">
+            
+            <label for="nombre">Nombre del Tipo (Ej: Bovino, Ovino):</label>
+            <div class="input-group">
+                <div class="icon-container"><i class="fa-solid fa-pen-to-square"></i></div>
+                <input type="text" id="nombre" placeholder="Nombre" required>
+            </div>
+            <button type="submit" class="btn-submit">Registrar Tipo</button>
+        </form>
+        <p id="mensaje" style="margin-top: 15px; text-align: center;"></p>
+    </div>
+</div>
+
+<script>
+    const form = document.getElementById("tipoAnimalForm");
+    const mensajeEl = document.getElementById("mensaje");
+
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const data = {
+            nombre: document.getElementById("nombre").value.trim()
+        };
+        
+        // POST a la API: /tipos-animales/
+        const response = await fetch("/tipos-animales/", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+        });
+
+        if (response.ok) {
+            const result = await response.json();
+            mensajeEl.textContent = `✅ Tipo "${result.nombre}" ID ${result.id} registrado.`;
+            mensajeEl.style.color = "#00cba9";
+            form.reset(); 
+        } else {
+            const error = await response.json();
+            // Mostrar el detalle del error si está disponible
+            mensajeEl.textContent = `❌ Error: ${error.detail || "Error desconocido"}`; 
+            mensajeEl.style.color = "#dc3545"; // Color rojo para errores
+        }
+    });
+</script>
+{% endblock %}
