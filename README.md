@@ -1,3 +1,4 @@
+
 # 👨‍🌾 Mi App Ganadera - Plataforma de Gestión de Fincas y Ganado
 
 ## 🌟 Descripción del Proyecto
@@ -19,6 +20,67 @@ Sigue estos pasos para levantar el proyecto en tu máquina local.
 
 ### 1. Clonar el Repositorio
 
-```bash
-git clone [https://github.com/tu_usuario/tu_repositorio.git](https://github.com/tu_usuario/tu_repositorio.git)
+
+git clone [https://github.com/tu_usuario/tu_repositorio.git
+https://github.com/tu_usuario/tu_repositorio.git)
 cd tu_repositorio
+
+
+### 🚜 Logica de Negocio
+
+
+La Lógica de Negocio de la Plataforma Ganadera se centra en garantizar la integridad de las relaciones y la unicidad de los datos. Para las Fincas, la regla principal es que el nombre debe ser único y, crucialmente, la eliminación de una finca debe eliminar en cascada todo el Ganado asociado para mantener la coherencia (usando la configuración de cascade en SQLAlchemy). Para el Ganado, la regla fundamental es la unicidad de la identificacion y la obligatoriedad de la asociación a una finca y un tipo de animal válidos (Integridad Referencial). Toda esta lógica se ejecuta en los routers de FastAPI, apoyándose en Pydantic para validar los datos entrantes y en db.commit() con setattr() para la persistencia de las actualizaciones. Finalmente, la lógica de interfaz exige una recarga de página inmediata en el frontend después de cada actualización exitosa (PUT) para sincronizar la vista con los nuevos datos de la base de datos.
+
+### 📑 PARTE TECNICA 
+
+El presente documento detalla la arquitectura, los requisitos y la implementación de la Plataforma de Gestión Ganadera, una solución de software desarrollada con FastAPI y SQLAlchemy para la administración digital de fincas y la información del ganado.
+
+#### 1. REQUISITOS DEL PROYECTO
+
+#### 1.1. REQUISITOS FUNCIONALES (RF)
+
+* **RF01 CRUD Finca:** El sistema debe permitir crear, leer, actualizar y eliminar (CRUD) registros de fincas.
+
+* **RF02 CRUD Ganado:** El sistema debe permitir crear, leer, actualizar y eliminar (CRUD) registros individuales de ganado.
+
+* **RF03 Vistas HTML:** El sistema debe proveer vistas renderizadas con Jinja2 para todas las operaciones principales.
+
+* **RF04 Listado Detallado:** El listado de ganado debe mostrar información relacionada (finca y tipo de animal).
+
+* **RF05 Asociación de Entidades:** Cada animal debe estar asociado obligatoriamente a una única finca y a un único tipo de animal (Integridad Referencial).
+
+#### 1.2. REQUISITOS NO FUNCIONALES (RNF)
+
+* **RNF01 Rendimiento:** El framework debe garantizar respuestas asíncronas de baja latencia (uso de FastAPI).
+
+* **RNF02 Escalabilidad:** La arquitectura debe permitir la migración a bases de datos relacionales robustas (PostgreSQL, MySQL).
+
+* **RNF03 Despliegue:** El proyecto debe ser fácilmente desplegable en servicios PaaS (Render).
+
+* **RNF04 Seguridad:** La aplicación debe mitigar riesgos de inyección SQL (garantizado por el uso del ORM SQLAlchemy).
+
+#### 2. ARQUITECTURA DE CLASES Y MODELOS
+
+Modelos de Base de Datos (models.py):
+
+* **Clase Finca:** Contiene id, nombre, tamaño y ubicacion. Define la relación uno-a-muchos con Ganado.
+
+* **Clase Ganado:** Contiene id, identificacion (única), nombre, edad y claves foráneas para finca_id y tipo_animal_id.
+
+* **Clase TipoAnimal:** Contiene id y nombre (único).
+
+* **Esquemas de Validación (schemas.py):** Se utiliza Pydantic para la serialización y validación de datos en los endpoints API (ej. FincaCreate y GanadoCreate).
+
+#### 3. ENDPOINTS CLAVE Y LÓGICA DE IMPLEMENTACIÓN
+
+* **POST /fincas/:** Crea la instancia del modelo, db.add(), db.commit(), db.refresh().
+
+* **PUT /fincas/{finca_id}:** Actualización: Utiliza setattr() para aplicar los cambios del esquema al objeto SQLAlchemy, seguido de db.commit() y db.refresh().
+
+* **DELETE /fincas/{finca_id}:** db.delete(finca) y db.commit(). La eliminación en cascada de registros de ganado asociados es manejada por el ORM.
+
+* **Lógica de Sincronización (Frontend):** Tras recibir un 200 OK de una operación de edición (PUT), el código JavaScript ejecuta window.location.reload() para forzar la recarga de datos en la plantilla Jinja2.
+
+#### 4. ESTRATEGIA DE DESPLIEGUE
+
+La aplicación se despliega como un Web Service en plataformas PaaS. El comando de inicio es: uvicorn main:app --host 0.0.0.0 --port $PORT.
