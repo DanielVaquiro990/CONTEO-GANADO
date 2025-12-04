@@ -12,6 +12,8 @@ import models
 from routers import finca
 from routers import ganado
 from routers import tipo_animal
+from fastapi.staticfiles import StaticFiles
+
 
 # Crear tablas en la base de datos
 Base.metadata.create_all(bind=engine)
@@ -21,6 +23,9 @@ app = FastAPI(
     description="API para administrar fincas, ganado y tipos de ganado",
     version="1.0.0"
 )
+
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 #---Templates---
 templates = Jinja2Templates(directory="templates")

@@ -5,6 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestión de Ganado</title>
     <link rel="stylesheet" href="/static/css/styles.css">
+
+    <style>
+        /* Fondo para toda la página */
+        body {
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            min-height: 100vh;
+
+            /* Imagen de fondo */
+            background-image: url('/static/img/fondo.png'); /* Cambia la ruta según tu archivo */
+            background-size: cover;        /* Ocupa toda la pantalla */
+            background-position: center;   /* Centrado */
+            background-repeat: no-repeat;
+            background-attachment: fixed;  /* Fijo al hacer scroll */
+        }
+
+        /* Overlay semi-transparente para mejorar lectura */
+        .container {
+            background-color: rgba(255, 255, 255, 0.667); /* Negro semitransparente */
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px auto;
+        }
+
+        /* Ajuste para navbar y footer si quieres semi-transparencia */
+        .navbar, .main-footer {
+            background-color: rgba(0,0,0,0.7);
+        }
+    </style>
 </head>
 <body>
 
@@ -30,14 +59,12 @@
                 <a href="/tipos-animales/crear">Registrar Tipo</a>
             </div>
         </li>
-        
-        </ul>
+    </ul>
 </nav>
 
 <div class="container">
     {% block content %}{% endblock %}
 </div>
-
 
 <footer class="main-footer">
     <div class="footer-content">
@@ -53,7 +80,7 @@
                 <li><a href="/">🏠 Inicio</a></li>
                 <li><a href="/fincas/lista">📋 Fincas</a></li>
                 <li><a href="/ganado/lista">➕ Ganado</a></li>
-                </ul>
+            </ul>
         </div>
     </div>
 

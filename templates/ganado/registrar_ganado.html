@@ -12,7 +12,8 @@
         <h1><i class="fa-solid fa-cow"></i> Registrar Nuevo Animal</h1>
         <p class="form-message">Ingrese la información detallada del animal.</p>
 
-        <form id="registroGanadoForm">
+        <!-- IMPORTANTE: enctype multipart/form-data -->
+        <form id="registroGanadoForm" enctype="multipart/form-data">
             
             <label for="identificacion">Identificación / Arete:</label>
             <div class="input-group">
@@ -66,6 +67,11 @@
                 </select>
             </div>
 
+            <div>
+                <label for="foto">Foto del Ganado:</label>
+                <input type="file" id="foto" name="foto" accept="image/*">
+            </div>
+
             <button type="submit" class="btn-submit">Registrar Ganado</button>
         </form>
         <p id="mensaje" style="margin-top: 15px; text-align: center;"></p>
@@ -73,62 +79,42 @@
 </div>
 
 <script>
-    const form = document.getElementById("registroGanadoForm");
-    const mensajeEl = document.getElementById("mensaje");
+const form = document.getElementById("registroGanadoForm");
+const mensajeEl = document.getElementById("mensaje");
 
-    form.addEventListener("submit", async (e) => {
-        e.preventDefault();
+form.addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-        const nombreValor = document.getElementById("nombre").value.trim() || null;
-        const edadValue = document.getElementById("edad").value.trim();
-        const fincaIdValue = document.getElementById("finca").value;
-        const tipoAnimalIdValue = document.getElementById("tipoAnimal").value;
+    const formData = new FormData();
+    formData.append("identificacion", document.getElementById("identificacion").value.trim());
+    formData.append("nombre", document.getElementById("nombre").value.trim() || '');
+    formData.append("fecha_nacimiento", document.getElementById("fechaNacimiento").value);
+    formData.append("sexo", document.getElementById("sexo").value);
+    formData.append("edad", document.getElementById("edad").value);
+    formData.append("finca_id", document.getElementById("finca").value);
+    formData.append("tipo_animal_id", document.getElementById("tipoAnimal").value);
 
-        const data = {
-            identificacion: document.getElementById("identificacion").value.trim(),
-            nombre: nombreValor, 
-            fecha_nacimiento: document.getElementById("fechaNacimiento").value,
-            sexo: document.getElementById("sexo").value,
-            
-            // Conversión a enteros (necesario para IDs y edad)
-            edad: edadValue ? parseInt(edadValue) : null,
-            finca_id: parseInt(fincaIdValue),
-            tipo_animal_id: parseInt(tipoAnimalIdValue)
-        };
-        
-        // POST a la API: /ganado/api/
-        const response = await fetch("/ganado/api/", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(data)
-        });
+    const fotoInput = document.getElementById("foto");
+    if (fotoInput.files.length > 0) {
+        formData.append("foto", fotoInput.files[0]);
+    }
 
-        if (response.ok) {
-            const result = await response.json();
-            mensajeEl.textContent = `✅ Animal "${result.identificacion}" registrado con éxito.`;
-            mensajeEl.style.color = "#00cba9";
-            form.reset(); 
-        } else {
-            const responseData = await response.json();
-            let errorMessage = "Error desconocido al registrar el ganado.";
-
-            if (responseData.detail) {
-                if (Array.isArray(responseData.detail)) {
-                    errorMessage = responseData.detail
-                        .map(err => {
-                            const field = err.loc && err.loc.length > 1 ? err.loc[1] : 'Campo';
-                            return `* ${field}: ${err.msg.replace('field required', 'Campo Requerido')}`;
-                        })
-                        .join('<br>');
-                    mensajeEl.innerHTML = `❌ Error de Validación:<br>${errorMessage}`; 
-                } else {
-                    errorMessage = responseData.detail;
-                    mensajeEl.textContent = `❌ Error: ${errorMessage}`;
-                }
-            }
-            mensajeEl.style.color = "#dc3545";
-        }
+    const response = await fetch("/ganado/api/", {
+        method: "POST",
+        body: formData
     });
-</script>
 
+    if (response.ok) {
+        const result = await response.json();
+        mensajeEl.textContent = `✅ Animal "${result.identificacion}" registrado con éxito.`;
+        mensajeEl.style.color = "#00cba9";
+        form.reset(); 
+    } else {
+        const responseData = await response.json();
+        let errorMessage = responseData.detail || "Error desconocido al registrar el ganado.";
+        mensajeEl.textContent = `❌ ${errorMessage}`;
+        mensajeEl.style.color = "#dc3545";
+    }
+});
+</script>
 {% endblock %}

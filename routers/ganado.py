@@ -1,11 +1,10 @@
-from fastapi import APIRouter, Request, Depends, HTTPException
+from fastapi import APIRouter, Request, Depends, HTTPException, UploadFile, File, Form
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
-# Asegúrate de que estos imports apunten a tus archivos correctos
-import models, schemas 
+from datetime import date
+import models, schemas
 from database import get_db
 
-# Inicializar Jinja2Templates (Asume que templates están en la carpeta 'templates')
 templates = Jinja2Templates(directory="templates") 
 
 router = APIRouter(
@@ -13,40 +12,61 @@ router = APIRouter(
     tags=["Ganado"]
 )
 
-# ============================================================
-#                      RUTAS DE VISTAS (HTML GET)
-# ============================================================
-
-# 1. Muestra el formulario para registrar Ganado
-# URL: /ganado/registrar
-@router.get("/registrar") 
+# FORMULARIO HTML
+@router.get("/registrar")
 async def registrar_ganado_view(request: Request, db: Session = Depends(get_db)):
-    """Muestra el formulario, cargando fincas y tipos de animales para los selects."""
     fincas = db.query(models.Finca).all()
     tipos_animales = db.query(models.TipoAnimal).all()
-    
     return templates.TemplateResponse(
-        "ganado/registrar_ganado.html", 
-        {
-            "request": request,
-            "fincas": fincas,
-            "tipos_animales": tipos_animales
-        }
+        "ganado/registrar_ganado.html",
+        {"request": request, "fincas": fincas, "tipos_animales": tipos_animales}
     )
 
-# 2. Muestra la lista de Ganado
-# URL: /ganado/lista
+# API POST con FormData y foto
+@router.post("/api/", response_model=schemas.Ganado)
+async def crear_ganado(
+    identificacion: str = Form(...),
+    nombre: str | None = Form(None),
+    fecha_nacimiento: date = Form(...),
+    sexo: str = Form(...),
+    edad: int = Form(...),
+    finca_id: int = Form(...),
+    tipo_animal_id: int = Form(...),
+    foto: UploadFile | None = File(None),
+    db: Session = Depends(get_db)
+):
+    nuevo_ganado = models.Ganado(
+        identificacion=identificacion,
+        nombre=nombre,
+        fecha_nacimiento=fecha_nacimiento,
+        sexo=sexo,
+        edad=edad,
+        finca_id=finca_id,
+        tipo_animal_id=tipo_animal_id
+    )
+
+    # Guardar foto si existe
+    if foto:
+        filename = f"static/uploads/{foto.filename}"
+        with open(filename, "wb") as f:
+            f.write(await foto.read())
+        nuevo_ganado.foto = filename
+
+    db.add(nuevo_ganado)
+    db.commit()
+    db.refresh(nuevo_ganado)
+    return nuevo_ganado
+
+# Lista ganado
 @router.get("/lista")
 async def listar_ganado_view(request: Request, db: Session = Depends(get_db)):
-    """Muestra la tabla de todo el ganado registrado, consultando la BD."""
-    # Nota: Si el listado se vuelve lento, usa select_related en SQLA para cargar relaciones
-    ganados = db.query(models.Ganado).all() 
+    ganados = db.query(models.Ganado).all()
     return templates.TemplateResponse(
         "ganado/lista_ganado.html",
         {"request": request, "ganados": ganados}
     )
 
-# 3. Muestra el formulario para editar Ganado (precargado)
+#Muestra el formulario para editar Ganado (precargado)
 # URL: /ganado/editar/{ganado_id}
 @router.get("/editar/{ganado_id}")
 async def editar_ganado_view(ganado_id: int, request: Request, db: Session = Depends(get_db)):
@@ -67,6 +87,7 @@ async def editar_ganado_view(ganado_id: int, request: Request, db: Session = Dep
             "tipos_animales": tipos_animales
         }
     )
+
 
 # 4. Muestra el detalle de un animal
 # URL: /ganado/detalle/{ganado_id}

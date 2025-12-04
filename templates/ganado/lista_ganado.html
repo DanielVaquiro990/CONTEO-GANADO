@@ -23,6 +23,7 @@
                 <th>Tipo Animal</th>
                 <th>Finca</th>
                 <th>Sexo</th>
+                <th>Foto</th>
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -31,14 +32,18 @@
                 {% for animal in ganados %}
                     <tr id="ganado-{{ animal.id }}">
                         <td>{{ animal.id }}</td> 
-                        
                         <td><a href="/ganado/detalle/{{ animal.id }}" style="color: #00cba9; text-decoration: none;">{{ animal.identificacion }}</a></td>
                         <td>{{ animal.nombre or 'N/A' }}</td>
-                        
                         <td>{{ animal.tipo_animal.nombre }}</td>
                         <td>{{ animal.finca.nombre }}</td>
-                        
                         <td>{{ animal.sexo }}</td>
+                        <td>
+                            {% if animal.foto %}
+                                <img src="/{{ animal.foto }}" alt="Foto" style="width: 80px; height: 80px; object-fit: cover; border-radius: 5px;">
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </td>
                         <td>
                             <button onclick="window.location.href='/ganado/editar/{{ animal.id }}'">Editar</button>
                             <button class="btn-eliminar" data-id="{{ animal.id }}" style="background-color: #dc3545;">Eliminar</button>
@@ -47,7 +52,7 @@
                 {% endfor %}
             {% else %}
                 <tr>
-                    <td colspan="7" style="text-align: center;">Aún no hay ganado registrado.</td>
+                    <td colspan="8" style="text-align: center;">Aún no hay ganado registrado.</td>
                 </tr>
             {% endif %}
         </tbody>
@@ -61,16 +66,12 @@
         document.querySelectorAll('.btn-eliminar').forEach(button => {
             button.addEventListener('click', async (e) => {
                 const ganadoId = e.target.getAttribute('data-id');
-                // Se busca el texto de la identificación en el <td> que contiene el <a>
                 const identificacion = e.target.closest('tr').querySelector('td a').textContent.trim();
 
                 if (confirm(`¿Estás seguro de que quieres eliminar el animal con ID/Arete: ${identificacion}?`)) {
-                    
-                    // CORRECCIÓN CLAVE: Llama al endpoint DELETE de la API: /ganado/api/{ganado_id}
                     const response = await fetch(`/ganado/api/${ganadoId}`, { method: 'DELETE' });
                     
                     if (response.ok) {
-                        // 1. Elimina la fila de la tabla
                         document.getElementById(`ganado-${ganadoId}`).remove();
                         feedbackEl.textContent = `✅ Animal ${identificacion} eliminado correctamente.`;
                         feedbackEl.style.color = "#00cba9";

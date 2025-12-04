@@ -3,10 +3,35 @@
 {% block head %}
     <title>Detalle del Animal: {{ ganado.identificacion }}</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="/static/css/styles_formularios.css"> 
+    <link rel="stylesheet" href="/static/css/styles.css"> 
 {% endblock %}
 
 {% block content %}
+<style>
+    /* Estilos globales para la tarjeta fondo oscuro */
+    .card h1, .card p {
+        color: white !important; /* Asegura que los títulos y párrafos sean blancos */
+    }
+    
+    .detalle-item {
+        /* Usamos la misma estructura pero forzamos el color */
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 0;
+        border-bottom: 1px solid #383c45;
+        color: white; /* Esto debería aplicar el color al texto principal del ítem */
+    }
+    .detalle-item span:first-child {
+        font-weight: bold;
+        color: #b0b0b0; /* Mantiene la etiqueta en un gris claro */
+    }
+    /* Asegurar que el segundo span (el valor) sea blanco o muy claro */
+    .detalle-item span:last-child { 
+        color: white !important; 
+    }
+    /* ... (resto de estilos) ... */
+</style>
+
 
 <div class="main-container">
     <div class="card detalle-card">
@@ -87,5 +112,29 @@
         }
     });
 </script>
+
+{% if ganado.foto %}
+    <div class="detalle-foto">
+        <img src="/{{ ganado.foto }}" alt="Foto de {{ ganado.identificacion }}">
+    </div>
+{% else %}
+    <p style="text-align:center; color:#dc3545;">No hay foto disponible</p>
+{% endif %}
+
+<style>
+.detalle-foto {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.detalle-foto img {
+    max-width: 600px;   /* Ajusta el ancho máximo */
+    width: 100%;        /* Hace que se adapte al contenedor si es más pequeño */
+    height: auto;       /* Mantiene la proporción */
+    border-radius: 10px; /* Bordes redondeados */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3); /* Sombra para destacar */
+}
+</style>
+
 
 {% endblock %}

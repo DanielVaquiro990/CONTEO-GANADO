@@ -38,6 +38,8 @@ class Ganado(Base):
     finca_id = Column(Integer, ForeignKey("fincas.id"), nullable=False)
     tipo_animal_id = Column(Integer, ForeignKey("tipos_animales.id"), nullable=False)
     fecha_registro = Column(DateTime, default=datetime.utcnow)
+    foto = Column(String, nullable=True)  
+
 
     finca = relationship("Finca", back_populates="ganados")
     tipo_animal = relationship("TipoAnimal", back_populates="ganados")

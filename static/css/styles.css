@@ -70,7 +70,7 @@ body {
 
 .navbar .search-bar button {
     padding: 8px 15px;
-    background-color: #00cba9; 
+    background-color: #179e3b; 
     color: white;
     border: none;
     border-radius: 5px;
@@ -79,7 +79,7 @@ body {
 }
 
 .navbar .search-bar button:hover {
-    background-color: #00a88d;
+    background-color: #0e9e45;
 }
 
 /* Enlaces principales */
@@ -99,7 +99,7 @@ body {
 }
 
 .nav-links > li > a:hover {
-    color: #00cba9; 
+    color: #17a749; 
 }
 
 /* ------------------ MENÚ DESPLEGABLE ------------------ */
@@ -142,12 +142,12 @@ body {
 }
 
 .dropdown-content a:hover {
-    background-color: #00cba9;
+    background-color: #1aa23f;
     color: #26282f;
 }
 
 .dropdown:hover > .dropbtn {
-    color: #00cba9;
+    color: #1aa23f;
 }
 
 .dropbtn i {
@@ -184,7 +184,7 @@ table th {
 
 /* ------------------ BOTONES ------------------ */
 button, input[type="submit"] {
-    background: #00cba9; 
+    background: #1aa23f; 
     color: white;
     padding: 8px 12px;
     border: none;
@@ -194,7 +194,7 @@ button, input[type="submit"] {
 }
 
 button:hover, input[type="submit"]:hover {
-    background: #00a88d;
+    background: #1aa23f;
 }
 
 /* ------------------ TARJETAS DE FORMULARIO ------------------ */
@@ -221,7 +221,7 @@ button:hover, input[type="submit"]:hover {
     display: block;
     width: 40px;
     height: 4px;
-    background-color: #00cba9;
+    background-color: #cb9c00;
     margin: 8px auto 0 auto;
     border-radius: 2px;
 }
@@ -261,7 +261,7 @@ button:hover, input[type="submit"]:hover {
 }
 
 .icon-container i {
-    color: #00cba9;
+    color: #cb8700;
     font-size: 18px;
 }
 
@@ -324,7 +324,7 @@ button:hover, input[type="submit"]:hover {
     top: 50%;
     right: 15px;
     transform: translateY(-50%);
-    color: #00cba9; 
+    color: #179538; 
     pointer-events: none; 
     font-size: 12px;
 }
@@ -334,7 +334,7 @@ button:hover, input[type="submit"]:hover {
     padding: 12px;
     border: none;
     border-radius: 8px;
-    background-color: #00cba9;
+    background-color: #179538;
     color: #ffffff;
     font-size: 18px;
     font-weight: bold;
@@ -344,7 +344,7 @@ button:hover, input[type="submit"]:hover {
 }
 
 .btn-submit:hover {
-    background-color: #00a88d;
+    background-color: #179538;
 }
 
 #mensaje {
@@ -363,7 +363,7 @@ button:hover, input[type="submit"]:hover {
 
 /* ------------------ FOOTER ------------------ */
 .main-footer {
-    background: #26282f;
+    background: #ffffff;
     color: #ffffff;
     flex-shrink: 0; /* No se encoje */
     width: 100%;
@@ -384,7 +384,7 @@ button:hover, input[type="submit"]:hover {
 }
 
 .footer-section h3 { 
-    color: #00cba9; 
+    color: #0cb843; 
     margin-bottom: 10px; 
 }
 
@@ -406,7 +406,7 @@ button:hover, input[type="submit"]:hover {
 }
 
 .footer-bottom {
-    background: #00cba9;
+    background: #169141;
     color: #26282f;
     padding: 10px 0;
     text-align: center;

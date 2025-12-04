@@ -1,6 +1,9 @@
 from pydantic import BaseModel
 from typing import Optional
 from datetime import date
+from fastapi import UploadFile, File
+
+# GanadoCreate se mantiene igual, sin la foto
 
 #------Finca----
 
