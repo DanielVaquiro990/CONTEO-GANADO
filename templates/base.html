@@ -35,9 +35,31 @@
 </nav>
 
 <div class="container">
-    {% block content %}
-    {% endblock %}
+    {% block content %}{% endblock %}
 </div>
 
+
+<footer class="main-footer">
+    <div class="footer-content">
+        <div class="footer-section about">
+            <h3>Mi App Ganadera</h3>
+            <p>Sistema de gestión para el control de fincas y ganado.</p>
+            <p>Email: contacto@mi-app-ganadera.com</p>
+        </div>
+
+        <div class="footer-section links">
+            <h3>Enlaces Rápidos</h3>
+            <ul>
+                <li><a href="/">🏠 Inicio</a></li>
+                <li><a href="/fincas/lista">📋 Fincas</a></li>
+                <li><a href="/ganado/lista">➕ Ganado</a></li>
+                </ul>
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        &copy; 2025 Mi App Ganadera | Desarrollado con FastAPI y SQLAlchemy
+    </div>
+</footer>
 </body>
 </html>

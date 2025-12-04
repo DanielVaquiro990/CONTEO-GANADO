@@ -1,4 +1,4 @@
-/* Importar fuente similar (Roboto o sans-serif estándar) */
+/* ------------------ FUENTES ------------------ */
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
 * {
@@ -8,21 +8,41 @@
     font-family: 'Roboto', sans-serif;
 }
 
-body {
-    background-color: #dcdcdc; /* Fondo gris claro general */
-    min-height: 100vh;
-    /* Configuración para centrar el formulario: */
-    display: flex;
-    flex-direction: column; 
+/* ------------------ ESTRUCTURA GENERAL ------------------ */
+html, body {
+    height: 100%;
+    margin: 0;
 }
 
-/* --- ESTILOS DE LA BARRA DE NAVEGACIÓN (Navbar) --- */
+body {
+    display: flex;
+    flex-direction: column; /* Apila contenido y footer */
+    min-height: 100vh;
+    background-color: #dcdcdc;
+}
+
+/* Contenedor principal de la página */
+.container {
+    flex: 1; /* Crece y empuja el footer hacia abajo */
+    padding: 30px;
+}
+
+/* Contenedor para centrar tarjetas (formularios) */
+.main-container {
+    flex: 1; 
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    padding: 20px;
+}
+
+/* ------------------ NAVBAR ------------------ */
 .navbar {
-    background-color: #26282f; /* Fondo oscuro */
+    background-color: #26282f;
     padding: 15px 30px;
     display: flex;
     justify-content: space-between;
-    align-items: center; /* Centra verticalmente los elementos flex */
+    align-items: center;
     box-shadow: 0 2px 10px rgba(0,0,0,0.3);
 }
 
@@ -62,32 +82,30 @@ body {
     background-color: #00a88d;
 }
 
-/* Enlaces principales (ul) */
+/* Enlaces principales */
 .nav-links {
     list-style: none;
     display: flex;
     gap: 20px;
 }
 
-/* Selector de primer nivel (Inicio, Listados, Registrar) - ALINEACIÓN CORREGIDA */
 .nav-links > li > a {
     color: #ffffff;
     text-decoration: none;
     font-size: 16px;
     transition: color 0.3s;
-    /* Quitamos el padding vertical para que el navbar lo centre */
-    padding: 0 10px; 
-    display: block; 
+    padding: 0 10px;
+    display: block;
 }
 
 .nav-links > li > a:hover {
     color: #00cba9; 
 }
 
-/* --- ESTILOS DEL MENÚ DESPLEGABLE --- */
+/* ------------------ MENÚ DESPLEGABLE ------------------ */
 .dropdown {
-    position: relative; 
-    padding: 0; 
+    position: relative;
+    padding: 0;
 }
 
 .dropbtn {
@@ -117,7 +135,7 @@ body {
 .dropdown-content a {
     color: #ffffff;
     padding: 10px 15px;
-    display: block; 
+    display: block;
     text-align: left;
     white-space: nowrap;
     font-size: 15px;
@@ -142,13 +160,7 @@ body {
     transform: rotate(180deg);
 }
 
-/* --- FIN ESTILOS DEL MENÚ DESPLEGABLE --- */
-
-/* --- ESTILOS GENERALES Y TABLAS --- */
-.container {
-    padding: 30px;
-}
-
+/* ------------------ TABLAS ------------------ */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -170,7 +182,7 @@ table th {
     font-weight: bold;
 }
 
-/* Botones genéricos */
+/* ------------------ BOTONES ------------------ */
 button, input[type="submit"] {
     background: #00cba9; 
     color: white;
@@ -185,17 +197,7 @@ button:hover, input[type="submit"]:hover {
     background: #00a88d;
 }
 
-/* --- ESTILOS DE LA TARJETA DE FORMULARIO --- */
-
-/* Contenedor que centra la tarjeta */
-.main-container {
-    flex: 1; 
-    display: flex;
-    justify-content: center;
-    align-items: center; 
-    padding: 20px;
-}
-
+/* ------------------ TARJETAS DE FORMULARIO ------------------ */
 .card {
     background-color: #26282f;
     width: 100%;
@@ -206,7 +208,6 @@ button:hover, input[type="submit"]:hover {
     text-align: center;
 }
 
-/* Título y su subrayado verde */
 .card h1 {
     color: #ffffff;
     margin-bottom: 30px;
@@ -225,9 +226,7 @@ button:hover, input[type="submit"]:hover {
     border-radius: 2px;
 }
 
-/* --- CORRECCIONES DE FORMULARIO (ETIQUETAS Y SELECTORES) --- */
-
-/* Estilos para las etiquetas y títulos de campo (Alineación a la izquierda) */
+/* Formularios */
 .card label,
 .card .field-title {
     color: #ffffff; 
@@ -240,12 +239,10 @@ button:hover, input[type="submit"]:hover {
     padding: 0 5px; 
 }
 
-/* Forzar alineación de los contenidos del formulario a la izquierda */
 .card form {
-    text-align: left; 
+    text-align: left;
 }
 
-/* Contenedor principal de los campos de entrada */
 .input-group {
     background-color: #383c45;
     border-radius: 5px;
@@ -268,7 +265,6 @@ button:hover, input[type="submit"]:hover {
     font-size: 18px;
 }
 
-/* Estilos de INPUTS */
 .input-group input {
     background: transparent;
     border: none;
@@ -283,14 +279,12 @@ button:hover, input[type="submit"]:hover {
     color: #b0b0b0;
 }
 
-/* Quitar flechas del input number */
 .input-group input[type=number]::-webkit-inner-spin-button, 
 .input-group input[type=number]::-webkit-outer-spin-button { 
   -webkit-appearance: none; 
   margin: 0; 
 }
 
-/* Estilos de SELECTORES */
 .input-group select {
     background: transparent;
     border: none;
@@ -300,37 +294,30 @@ button:hover, input[type="submit"]:hover {
     padding: 10px;
     font-size: 16px;
     cursor: pointer;
-    
-    /* Personalización para ocultar la flecha por defecto */
     -webkit-appearance: none; 
     -moz-appearance: none;    
     appearance: none;         
-    
-    /* Estilos de caja */
     background-color: #383c45; 
     border-radius: 5px;
-    margin: -5px; /* Compensa el padding del .input-group */
-    padding: 15px; /* Altura uniforme */
+    margin: -5px;
+    padding: 15px;
     line-height: 1; 
 }
 
-/* Estilos para las opciones dentro del selector */
 .input-group select option {
     background-color: #383c45;
     color: #ffffff;
     padding: 10px;
 }
 
-/* Wrapper para el SELECT que permite poner la flecha personalizada */
 .input-group.select-wrapper {
     position: relative;
-    padding: 0; /* Quitamos el padding del .input-group */
+    padding: 0;
     margin-bottom: 20px;
 }
 
-/* Colocar la flecha personalizada */
 .input-group.select-wrapper::after {
-    content: '\f078'; /* Ícono de flecha (requiere Font Awesome) */
+    content: '\f078';
     font-family: 'Font Awesome 5 Free'; 
     font-weight: 900;
     position: absolute;
@@ -342,7 +329,6 @@ button:hover, input[type="submit"]:hover {
     font-size: 12px;
 }
 
-/* Botón de envío */
 .btn-submit {
     width: 100%;
     padding: 12px;
@@ -367,11 +353,63 @@ button:hover, input[type="submit"]:hover {
     color: #ffffff;
 }
 
-/* Estilo para mensajes de introducción o indicaciones al inicio del formulario */
 .form-message {
-    color: #ffffff; /* Color gris claro para contraste sutil sobre el fondo oscuro */
+    color: #ffffff;
     font-size: 14px;
     margin-bottom: 25px; 
     text-align: center; 
     padding: 0 10px;
+}
+
+/* ------------------ FOOTER ------------------ */
+.main-footer {
+    background: #26282f;
+    color: #ffffff;
+    flex-shrink: 0; /* No se encoje */
+    width: 100%;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.footer-section {
+    min-width: 250px;
+    margin: 10px 0;
+}
+
+.footer-section h3 { 
+    color: #00cba9; 
+    margin-bottom: 10px; 
+}
+
+.footer-section ul { 
+    list-style: none; 
+    padding: 0; 
+}
+
+.footer-section a { 
+    color: #ccc; 
+    text-decoration: none; 
+    display: block; 
+    padding: 5px 0; 
+    transition: color 0.3s; 
+}
+
+.footer-section a:hover { 
+    color: #fff; 
+}
+
+.footer-bottom {
+    background: #00cba9;
+    color: #26282f;
+    padding: 10px 0;
+    text-align: center;
+    font-weight: bold;
+    font-size: 0.9em;
 }

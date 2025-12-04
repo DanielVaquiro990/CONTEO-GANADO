@@ -1,7 +1,8 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
+from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Date
 from sqlalchemy.orm import relationship
-from datetime import datetime 
+from datetime import datetime
 from database import Base
+
 
 class Finca(Base):
     __tablename__ = "fincas"
@@ -33,6 +34,7 @@ class Ganado(Base):
     nombre = Column(String(100), nullable=True)
     edad = Column(Integer, nullable=False)
     sexo = Column(String(10), nullable=False)
+    fecha_nacimiento = Column(Date)
     finca_id = Column(Integer, ForeignKey("fincas.id"), nullable=False)
     tipo_animal_id = Column(Integer, ForeignKey("tipos_animales.id"), nullable=False)
     fecha_registro = Column(DateTime, default=datetime.utcnow)
