@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ finca.nombre }}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/styles_formulario.css">
+    <style>
+        .detalle-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #383c45;
+            color: white;
+        }
+        .detalle-item span:first-child {
+            font-weight: bold;
+            color: #b0b0b0;
+        }
+        .detalle-acciones {
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar"> 
+        </nav>
+    
+    <div class="main-container">
+        <div class="card" style="text-align: left;">
+            <h1>Detalle: {{ finca.nombre }}</h1>
+            
+            <div class="detalle-item">
+                <span><i class="fa-solid fa-tag" style="color: #00cba9;"></i> Nombre:</span>
+                <span>{{ finca.nombre }}</span>
+            </div>
+            <div class="detalle-item">
+                <span><i class="fa-solid fa-ruler-combined" style="color: #00cba9;"></i> Tamaño:</span>
+                <span>{{ finca.tamaño }} ha</span>
+            </div>
+            <div class="detalle-item">
+                <span><i class="fa-solid fa-location-dot" style="color: #00cba9;"></i> Ubicación:</span>
+                <span>{{ finca.ubicacion }}</span>
+            </div>
+            <div class="detalle-item">
+                <span><i class="fa-solid fa-fingerprint" style="color: #00cba9;"></i> ID Interno:</span>
+                <span>{{ finca.id }}</span>
+            </div>
+
+            <div class="detalle-acciones">
+                <button onclick="window.location.href='/fincas/editar/{{ finca.id }}'">Editar</button>
+                <button id="btn-eliminar-detalle" style="background-color: #dc3545;" data-id="{{ finca.id }}">Eliminar</button>
+            </div>
+            
+            <p id="mensaje-detalle" style="text-align: center; margin-top: 15px;"></p>
+
+        </div>
+    </div>
+    
+    </body>
+</html>

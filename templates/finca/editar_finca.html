@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Finca</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/styles_formulario.css">
+</head>
+
+<body>
+    <nav class="navbar"> 
+        </nav>
+    
+    <div class="main-container">
+        <div class="card">
+            <h1>✍️ Editar Finca: {{ finca.nombre }}</h1>
+
+            <form id="editarFincaForm">
+                
+                <div class="input-group">
+                    <div class="icon-container"><i class="fa-solid fa-tag"></i></div>
+                    <input type="text" id="nombre" placeholder="Nombre de la Finca" value="{{ finca.nombre }}" required>
+                </div>
+
+                <div class="input-group">
+                    <div class="icon-container"><i class="fa-solid fa-ruler-combined"></i></div>
+                    <input type="number" id="tamaño" min="1" placeholder="Tamaño (hectáreas)" value="{{ finca.tamaño }}" required>
+                </div>
+
+                <div class="input-group">
+                    <div class="icon-container"><i class="fa-solid fa-location-dot"></i></div>
+                    <input type="text" id="ubicacion" placeholder="Ubicación" value="{{ finca.ubicacion }}" required>
+                </div>
+
+                <button type="submit" class="btn-submit">Guardar Cambios</button>
+            </form>
+
+            <p id="mensaje" style="margin-top: 15px;"></p>
+        </div>
+    </div>
+    
+    <script>
+        const form = document.getElementById("editarFincaForm");
+        const fincaId = "{{ finca.id }}"; // Obtiene el ID de la finca desde el contexto
+
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const data = {
+                nombre: document.getElementById("nombre").value,
+                tamaño: parseFloat(document.getElementById("tamaño").value),
+                ubicacion: document.getElementById("ubicacion").value
+            };
+
+            const response = await fetch(`/fincas/${fincaId}`, {
+                method: "PUT", // Usa el método PUT de tu router
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            });
+
+            const mensajeEl = document.getElementById("mensaje");
+
+            if (response.ok) {
+                mensajeEl.textContent = "✅ Finca actualizada correctamente.";
+                mensajeEl.style.color = "#00cba9";
+                // Opcional: Redirigir a la lista después de un tiempo
+                // setTimeout(() => window.location.href = "/fincas/lista", 1500);
+            } else {
+                const error = await response.json();
+                mensajeEl.textContent = `❌ Error al actualizar: ${error.detail || response.statusText}`;
+                mensajeEl.style.color = "#dc3545";
+            }
+        });
+    </script>
+
+</body>
+</html>

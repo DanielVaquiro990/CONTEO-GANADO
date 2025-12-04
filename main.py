@@ -48,6 +48,8 @@ app.include_router(finca.router)
 app.include_router(ganado.router)
 app.include_router(tipo_ganado.router)
 
+
+
 # ============================================================
 #                        RUTA RAÍZ
 # ============================================================
@@ -58,7 +60,3 @@ def home(request: Request):
         "index.html",
         {"request": request, "mensaje": "Sistema funcionando"}
     )
-
-@app.get("/crear-finca", response_class=HTMLResponse)
-def form_finca(request: Request):
-    return templates.TemplateResponse("crear_finca.html", {"request": request})

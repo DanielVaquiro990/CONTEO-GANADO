@@ -1,56 +1,26 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registrar Finca</title>
+{% extends "base.html" %}
+
+{% block head %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/static/css/styles_formularios.css"> 
-</head>
+    <title>Registrar Finca</title>
+{% endblock %}
 
-<body>
-    
-    <nav class="navbar">
-        <a href="/" class="logo">🐄 Gestión de Ganado</a>
-
-        <form class="search-bar" method="get" action="/buscar">
-            <input type="text" name="q" placeholder="Buscar ganado...">
-            <button type="submit">Buscar</button>
-        </form>
-
-        <ul class="nav-links">
-            <li><a href="/">Inicio</a></li>
-            <li><a href="/crear-finca">Crear Finca</a></li>
-            <li><a href="/ganado/lista">Lista de Ganado</a></li>
-            <li><a href="/ganado/registrar">Registrar</a></li>
-            <li><a href="/dashboard">Dashboard</a></li>
-        </ul>
-    </nav>
-    
+{% block content %}
     <div class="main-container">
         <div class="card">
             <h1>Registrar Nueva Finca</h1>
-
             <form id="fincaForm">
-                
                 <div class="input-group">
-                    <div class="icon-container">
-                        <i class="fa-solid fa-tag"></i>
-                    </div>
+                    <div class="icon-container"><i class="fa-solid fa-tag"></i></div>
                     <input type="text" id="nombre" placeholder="Nombre de la Finca" required>
                 </div>
-
                 <div class="input-group">
-                    <div class="icon-container">
-                        <i class="fa-solid fa-ruler-combined"></i>
-                    </div>
+                    <div class="icon-container"><i class="fa-solid fa-ruler-combined"></i></div>
                     <input type="number" id="tamaño" min="1" placeholder="Tamaño (hectáreas)" required>
                 </div>
-
                 <div class="input-group">
-                    <div class="icon-container">
-                        <i class="fa-solid fa-location-dot"></i>
-                    </div>
+                    <div class="icon-container"><i class="fa-solid fa-location-dot"></i></div>
                     <input type="text" id="ubicacion" placeholder="Ubicación" required>
                 </div>
 
@@ -62,8 +32,8 @@
     </div>
     
     <script>
+        // ... (Tu script JS de creación aquí) ...
         const form = document.getElementById("fincaForm");
-        // Tu script JS se mantiene igual
         form.addEventListener("submit", async (e) => {
             e.preventDefault();
 
@@ -75,9 +45,7 @@
 
             const response = await fetch("/fincas/", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(data)
             });
 
@@ -90,5 +58,4 @@
         });
     </script>
 
-</body>
-</html>
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+    
+    <h1 style="margin-top: 10px;">📑 Fincas Registradas</h1>
+
+    <p><a href="/crear-finca"><button>+ Registrar Nueva Finca</button></a></p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Tamaño (ha)</th>
+                <th>Ubicación</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if fincas %}
+                {% for finca in fincas %}
+                    <tr id="finca-{{ finca.id }}">
+                        <td><a href="/fincas/{{ finca.id }}" style="color: #00cba9; text-decoration: none;">{{ finca.nombre }}</a></td>
+                        <td>{{ finca.tamaño }}</td>
+                        <td>{{ finca.ubicacion }}</td>
+                        <td>
+                            <button onclick="window.location.href='/fincas/editar/{{ finca.id }}'">Editar</button>
+                            <button class="btn-eliminar" data-id="{{ finca.id }}" style="background-color: #dc3545;">Eliminar</button>
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="4" style="text-align: center;">Aún no hay fincas registradas.</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+    
+    <script>
+        // Aquí debes añadir la lógica JS para el botón de eliminar, como te sugerí anteriormente.
+        document.querySelectorAll('.btn-eliminar').forEach(button => {
+            button.addEventListener('click', async (e) => {
+                const fincaId = e.target.getAttribute('data-id');
+                if (confirm(`¿Estás seguro de que quieres eliminar la Finca ID ${fincaId}?`)) {
+                    const response = await fetch(`/fincas/${fincaId}`, { method: 'DELETE' });
+                    if (response.ok) {
+                        document.getElementById(`finca-${fincaId}`).remove();
+                        alert(`Finca ID ${fincaId} eliminada.`);
+                    } else {
+                        alert("Error al eliminar la finca.");
+                    }
+                }
+            });
+        });
+    </script>
+
+{% endblock %}
