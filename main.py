@@ -1,15 +1,44 @@
 from fastapi import FastAPI
-from routers import finca, ganado
-from database import Base, engine
+from fastapi.middleware.cors import CORSMiddleware
 
-app = FastAPI()
+from database import engine
+import models
 
-Base.metadata.create_all(bind=engine)
+# Routers
+from routers import finca
+from routers import ganado
+from routers import tipo_ganado
 
-@app.get("/") #MENSAJE PARA DOMINIO LOCAL /8000
-def inicio():
-    return {"CONTROL DE GANADO"}
+# Crear tablas en la base de datos
+models.Base.metadata.create_all(bind=engine)
 
+app = FastAPI(
+    title="Sistema de Gestión de Ganado",
+    description="API para administrar fincas, ganado y tipos de ganado",
+    version="1.0.0"
+)
 
+# ============================================================
+#                      CORS (opcional)
+# ============================================================
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],      # En producción debes especificar dominio
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# ============================================================
+#                    RUTAS (Routers)
+# ============================================================
 app.include_router(finca.router)
 app.include_router(ganado.router)
+app.include_router(tipo_ganado.router)
+
+# ============================================================
+#                        RUTA RAÍZ
+# ============================================================
+@app.get("/")
+def root():
+    return {"mensaje": "API de gestión de ganado funcionando correctamente"}

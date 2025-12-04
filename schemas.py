@@ -44,14 +44,17 @@ class GanadoUpdate(BaseModel):
 
 #-------Tipo de Animal------
 
-class TipoAnimalBase(BaseModel):
+class TipoGanadoBase(BaseModel):
     nombre: str
-    descripcion: str | None = None #Opcional por si se quiere añadir mas información
 
-class TipoAnimalCreate(TipoAnimalBase):
+class TipoGanadoCreate(TipoGanadoBase):
     pass
 
-class TipoAnimal(TipoAnimalBase):
+class TipoGanado(TipoGanadoBase):
     id: int
+
     class Config:
-        orm_mode = True
+        from_attributes = True
+
+
+

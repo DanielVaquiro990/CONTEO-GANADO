@@ -1,6 +1,6 @@
-fastapi[all]
-uvicorn
-sqlalchemy
-pydantic
-pandas
-openpyxl  # Para generar XLSX
+fastapi #framework principal
+uvicorn[standard] # Servidor ASGI para correr FastApi
+sqlalchemy #ORM para manejar la base de datos SQLite
+pydantic #Validacion de datos y esquemas
+python-multipart #Importante para formularios HTML y subida de archivos
+jinja2 #Renderiza HTML ( formularios, dashboards, web)
